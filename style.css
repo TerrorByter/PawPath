@@ -104,9 +104,11 @@ body {
   display: flex;
   flex-direction: column;
   opacity: 0;
-  transform: translateX(24px);
+  /* Default off-screen position: to the right (waiting to slide in forward) */
+  transform: translateX(40px);
   pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
   background: var(--c-bg);
   overflow-y: auto;
   overflow-x: hidden;
@@ -118,6 +120,7 @@ body {
   display: none;
 }
 
+/* — Active: centred, fully visible — */
 .screen.active {
   opacity: 1;
   transform: translateX(0);
@@ -125,10 +128,23 @@ body {
   z-index: 10;
 }
 
-.screen.slide-out {
+/* — Forward EXIT: current slides out to the LEFT — */
+.screen.slide-out-left {
   opacity: 0;
-  transform: translateX(-24px);
+  transform: translateX(-40px);
 }
+
+/* — Backward EXIT: current slides out to the RIGHT — */
+.screen.slide-out-right {
+  opacity: 0;
+  transform: translateX(40px);
+}
+
+/* — Backward ENTER: new screen starts off to the LEFT — */
+.screen.slide-from-left {
+  transform: translateX(-40px);
+}
+
 
 /* ── Common Headers ── */
 .screen-header {

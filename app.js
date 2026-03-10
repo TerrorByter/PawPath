@@ -57,24 +57,68 @@ let heartedPets = new Set();
 /* ──────────────────────
    SCREEN NAVIGATION
 ────────────────────── */
+
+// Depth map — higher number = further "forward" in the app.
+// Forward nav (going deeper): new screen slides in from RIGHT, old slides out LEFT.
+// Backward nav (going back):  new screen slides in from LEFT,  old slides out RIGHT.
+const SCREEN_DEPTH = {
+  'screen-home': 0,
+  'screen-browse': 1,
+  'screen-pet-detail': 2,
+  'screen-book-visit': 3,
+  'screen-apply': 3,
+  'screen-journey': 4,
+  'screen-interview': 5,
+  'screen-home-check': 5,
+  'screen-approval': 6,
+  'screen-post-adoption': 7,
+  'screen-profile': 8,
+};
+
 function goScreen(id) {
   const prev = document.querySelector('.screen.active');
   const next = document.getElementById(id);
   if (!next || prev === next) return;
 
+  // Determine direction: forward = slide from right, backward = slide from left
+  const prevDepth = SCREEN_DEPTH[prev ? prev.id : null] ?? 0;
+  const nextDepth = SCREEN_DEPTH[id] ?? 0;
+  const isForward = nextDepth >= prevDepth;
+
   if (prev) {
     prev.classList.remove('active');
-    prev.classList.add('slide-out');
-    setTimeout(() => prev.classList.remove('slide-out'), 350);
+    // Exit: forward → slide left; backward → slide right
+    const exitClass = isForward ? 'slide-out-left' : 'slide-out-right';
+    prev.classList.add(exitClass);
+    setTimeout(() => prev.classList.remove(exitClass), 380);
   }
+
+  // Set starting position for the incoming screen before making it active
+  if (isForward) {
+    // Comes from the right — default .screen transform already positions it there
+    next.classList.remove('slide-from-left');
+  } else {
+    // Comes from the left
+    next.classList.add('slide-from-left');
+    // Force a reflow so the class is applied before the transition starts
+    void next.offsetWidth;
+  }
+
   next.classList.add('active');
 
-  // Scroll to top
-  next.scrollTo({ top: 0 });
+  // Once active remove the helper class (transition handles the rest)
+  if (!isForward) {
+    requestAnimationFrame(() => next.classList.remove('slide-from-left'));
+  }
 
-  // Bottom nav active state
+  // Scroll inner areas back to top
+  next.scrollTo({ top: 0 });
+  const scrollArea = next.querySelector('.browse-scroll-area, .screen-body');
+  if (scrollArea) scrollArea.scrollTo({ top: 0 });
+
   updateNav(id);
 }
+
 
 function updateNav(screenId) {
   const navMap = {
@@ -118,7 +162,7 @@ function renderPetGrid(filter = 'all') {
         <div class="pgc-name">${p.name}</div>
         <div class="pgc-meta">${p.type === 'dog' ? '🐶' : '🐱'} ${p.breed} · ${p.age}</div>
         <div class="pgc-badge-row">
-          ${p.tags.slice(0,2).map(t => `<span class="pgc-badge">${t}</span>`).join('')}
+          ${p.tags.slice(0, 2).map(t => `<span class="pgc-badge">${t}</span>`).join('')}
         </div>
       </div>
     </div>
@@ -185,7 +229,7 @@ function switchTab(tab) {
     document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tab);
   });
   document.querySelectorAll('.dtab').forEach((btn, i) => {
-    btn.classList.toggle('active', ['about','medical','gallery'][i] === tab);
+    btn.classList.toggle('active', ['about', 'medical', 'gallery'][i] === tab);
   });
 }
 
@@ -218,7 +262,7 @@ function toggleHeart(petId) {
     detailHeart.classList.toggle('liked', heartedPets.has(petId));
   }
 
-  showToast(heartedPets.has(petId) ? `${petId.charAt(0).toUpperCase()+petId.slice(1)} saved to wishlist ❤️` : 'Removed from wishlist');
+  showToast(heartedPets.has(petId) ? `${petId.charAt(0).toUpperCase() + petId.slice(1)} saved to wishlist ❤️` : 'Removed from wishlist');
 }
 
 /* ──────────────────────
@@ -233,8 +277,8 @@ function renderCalendar(containerId, onSelect) {
   let month = now.getMonth();
 
   function draw() {
-    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    const days = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const today = new Date();
@@ -245,7 +289,7 @@ function renderCalendar(containerId, onSelect) {
         <div class="cal-month">${monthNames[month]} ${year}</div>
         <button class="cal-nav" onclick="calNext('${containerId}')">›</button>
       </div>
-      <div class="cal-days-header">${days.map(d=>`<div class="cal-day-name">${d}</div>`).join('')}</div>
+      <div class="cal-days-header">${days.map(d => `<div class="cal-day-name">${d}</div>`).join('')}</div>
       <div class="cal-days">
     `;
 
@@ -253,7 +297,7 @@ function renderCalendar(containerId, onSelect) {
 
     for (let d = 1; d <= daysInMonth; d++) {
       const date = new Date(year, month, d);
-      const isPast = date < new Date(today.setHours(0,0,0,0));
+      const isPast = date < new Date(today.setHours(0, 0, 0, 0));
       const isToday = d === now.getDate() && month === now.getMonth() && year === now.getFullYear();
       const isSelected = selectedDate && selectedDate.getDate() === d && selectedDate.getMonth() === month && selectedDate.getFullYear() === year;
       let cls = 'cal-day';
@@ -273,24 +317,24 @@ function renderCalendar(containerId, onSelect) {
   draw();
 }
 
-window.calPrev = function(id) {
+window.calPrev = function (id) {
   const c = document.getElementById(id);
   const { year, month } = c._getYM();
   const nm = month === 0 ? 11 : month - 1;
   const ny = month === 0 ? year - 1 : year;
   c._setYM(ny, nm);
 };
-window.calNext = function(id) {
+window.calNext = function (id) {
   const c = document.getElementById(id);
   const { year, month } = c._getYM();
   const nm = month === 11 ? 0 : month + 1;
   const ny = month === 11 ? year + 1 : year;
   c._setYM(ny, nm);
 };
-window.selectDate = function(y, m, d, id) {
+window.selectDate = function (y, m, d, id) {
   selectedDate = new Date(y, m, d);
   // Redraw all calendars
-  ['calendar-mini','calendar-interview','calendar-homecheck'].forEach(cid => {
+  ['calendar-mini', 'calendar-interview', 'calendar-homecheck'].forEach(cid => {
     const c = document.getElementById(cid);
     if (c && c._draw) c._draw();
   });
