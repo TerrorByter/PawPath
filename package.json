@@ -8,8 +8,5 @@
   },
   "engines": {
     "node": ">=18"
-  },
-  "devDependencies": {
-    "brain.js": "^2.0.0-beta.24"
   }
 }
