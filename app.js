@@ -54,6 +54,116 @@ const PETS = [
     urgent: false,
     energy: 'medium', apartment_friendly: true,
     good_with_kids: true, shedding: 'low', alone_tolerance: 'medium'
+  },
+  {
+    id: 'daisy', name: 'Daisy', breed: 'Pembroke Welsh Corgi', type: 'dog', size: 'small',
+    age: '1 year', weight: '10 kg', gender: 'Female', img: 'assets/daisy.jpg',
+    status: 'Available', vaccinated: 'Yes', neutered: 'Yes',
+    tags: ['Friendly', 'Low-set', 'Outgoing'],
+    tempTags: ['Spirited', 'Alert', 'Affectionate'],
+    desc: 'Daisy is a spiritful Corgi who loves attention and short walks. She is very affectionate and gets along well with children. Perfect for a loving family home.',
+    urgent: false,
+    energy: 'low', apartment_friendly: true,
+    good_with_kids: true, shedding: 'medium', alone_tolerance: 'high'
+  },
+  {
+    id: 'milo', name: 'Milo', breed: 'Orange Tabby', type: 'cat', size: 'small',
+    age: '2 years', weight: '4.5 kg', gender: 'Male', img: 'assets/milo.jpg',
+    status: 'Available', vaccinated: 'Yes', neutered: 'Yes',
+    tags: ['Relaxed', 'Mellow', 'Chatty'],
+    tempTags: ['Vibrant', 'Social', 'Sweet'],
+    desc: 'Milo is a classic orange tabby with a heart of gold. He loves human company and will follow you around the house for some head scratches.',
+    urgent: false,
+    energy: 'medium', apartment_friendly: true,
+    good_with_kids: false, shedding: 'medium', alone_tolerance: 'high'
+  },
+  {
+    id: 'cooper', name: 'Cooper', breed: 'Border Collie', type: 'dog', size: 'large',
+    age: '2.5 years', weight: '20 kg', gender: 'Male', img: 'assets/cooper.jpg',
+    status: 'Available', vaccinated: 'Yes', neutered: 'Yes',
+    tags: ['Intelligent', 'Athletic', 'Focused'],
+    tempTags: ['Workaholic', 'Eager', 'Protective'],
+    desc: 'Cooper is a highly intelligent Border Collie who needs a job to do. Ideal for an active owner who loves training and outdoor activities.',
+    urgent: false,
+    energy: 'high', apartment_friendly: false,
+    good_with_kids: true, shedding: 'high', alone_tolerance: 'low'
+  },
+  {
+    id: 'coco', name: 'Coco', breed: 'Siamese', type: 'cat', size: 'small',
+    age: '3 years', weight: '3.5 kg', gender: 'Female', img: 'assets/coco.jpg',
+    status: 'Available', vaccinated: 'Yes', neutered: 'Yes',
+    tags: ['Elegant', 'Vocal', 'Attached'],
+    tempTags: ['Smart', 'Demanding', 'Loyal'],
+    desc: 'Coco is a beautiful Siamese who loves to be the center of attention. She is very vocal and will let you know when she wants playtime or treats.',
+    urgent: false,
+    energy: 'low', apartment_friendly: true,
+    good_with_kids: false, shedding: 'low', alone_tolerance: 'high'
+  },
+  {
+    id: 'oliver', name: 'Oliver', breed: 'French Bulldog', type: 'dog', size: 'small',
+    age: '4 years', weight: '11 kg', gender: 'Male', img: 'assets/oliver.jpg',
+    status: 'Available', vaccinated: 'Yes', neutered: 'Yes',
+    tags: ['Low-energy', 'Playful', 'Stubborn'],
+    tempTags: ['Comedic', 'Chill', 'Lovable'],
+    desc: 'Oliver is a typical Frenchie who loves napping as much as he loves short play sessions. He is great with kids and very low maintenance.',
+    urgent: false,
+    energy: 'low', apartment_friendly: true,
+    good_with_kids: true, shedding: 'low', alone_tolerance: 'medium'
+  },
+  {
+    id: 'simba', name: 'Simba', breed: 'Ginger Maine Coon Mix', type: 'cat', size: 'medium',
+    age: '5 years', weight: '6.5 kg', gender: 'Male', img: 'assets/simba.jpg',
+    status: 'Available', vaccinated: 'Yes', neutered: 'Yes',
+    tags: ['Floppy', 'Big', 'Gentle giant'],
+    tempTags: ['Magnificent', 'Fluffy', 'Kind'],
+    desc: 'Simba is a large, fluffy ginger cat who is a true gentle giant. He loves lounging in the sun and is surprisingly active for his size.',
+    urgent: false,
+    energy: 'high', apartment_friendly: true,
+    good_with_kids: true, shedding: 'medium', alone_tolerance: 'medium'
+  },
+  {
+    id: 'bailey', name: 'Bailey', breed: 'Cocker Spaniel', type: 'dog', size: 'medium',
+    age: '2 years', weight: '13 kg', gender: 'Female', img: 'assets/bailey.jpg',
+    status: 'Available', vaccinated: 'Yes', neutered: 'Yes',
+    tags: ['Gentle', 'Happy', 'Good ears'],
+    tempTags: ['Cheerful', 'Gentle', 'Sensitive'],
+    desc: 'Bailey is a sweet and happy Cocker Spaniel who loves everyone she meets. She thrives on companionship and gentle walks.',
+    urgent: false,
+    energy: 'medium', apartment_friendly: true,
+    good_with_kids: true, shedding: 'high', alone_tolerance: 'medium'
+  },
+  {
+    id: 'nala', name: 'Nala', breed: 'Calico', type: 'cat', size: 'small',
+    age: '1.5 years', weight: '3.8 kg', gender: 'Female', img: 'assets/nala.jpg',
+    status: 'Available', vaccinated: 'Yes', neutered: 'Yes',
+    tags: ['Striking', 'Independent', 'Quiet'],
+    tempTags: ['Reserved', 'Graceful', 'Observant'],
+    desc: 'Nala is a beautiful calico cat who enjoys watching the world from a high bookshelf. She is independent but appreciates a good scratching session.',
+    urgent: false,
+    energy: 'low', apartment_friendly: true,
+    good_with_kids: false, shedding: 'medium', alone_tolerance: 'high'
+  },
+  {
+    id: 'teddy', name: 'Teddy', breed: 'Toy Poodle', type: 'dog', size: 'small',
+    age: '3 years', weight: '4.5 kg', gender: 'Male', img: 'assets/teddy.jpg',
+    status: 'Urgent', vaccinated: 'Yes', neutered: 'Yes',
+    tags: ['Hypoallergenic', 'Clever', 'Portable'],
+    tempTags: ['Bouncy', 'Bright', 'Charming'],
+    desc: 'Teddy is a charming little poodle who is always ready for a walk. He is very clever and learns tricks quickly. Currently in urgent need of rehoming.',
+    urgent: true,
+    energy: 'medium', apartment_friendly: true,
+    good_with_kids: true, shedding: 'low', alone_tolerance: 'high'
+  },
+  {
+    id: 'cleo', name: 'Cleo', breed: 'Abyssinian', type: 'cat', size: 'small',
+    age: '2 years', weight: '3 kg', gender: 'Female', img: 'assets/cleo.jpg',
+    status: 'Available', vaccinated: 'Yes', neutered: 'Yes',
+    tags: ['Sleek', 'Active', 'Inquisitive'],
+    tempTags: ['Acrobatic', 'Intelligent', 'Curious'],
+    desc: 'Cleo is a sleek and active Abyssinian who loves to climb and explore. She is very intelligent and needs interactive toys to keep her busy.',
+    urgent: false,
+    energy: 'high', apartment_friendly: true,
+    good_with_kids: false, shedding: 'low', alone_tolerance: 'medium'
   }
 ];
 
@@ -416,6 +526,9 @@ function toggleHeart(petId) {
   }
 
   showToast(heartedPets.has(petId) ? `${petId.charAt(0).toUpperCase() + petId.slice(1)} saved to wishlist ❤️` : 'Removed from wishlist');
+
+  // Update ML recommendations based on new heart state
+  updateRecommendations();
 }
 
 /* ──────────────────────
@@ -679,15 +792,25 @@ function updateRecommendations() {
   const container = document.getElementById('home-ml-recommendations');
   const list = document.getElementById('ml-recommendations-list');
 
-  if (!userProfile || !window.PawML) {
+  if (!window.PawML) {
+    container.classList.add('hidden');
+    return;
+  }
+
+  // Derive the active profile to use for ranking
+  // If user hasn't run the AI Match yet, use their "Likes" to build a profile
+  // If they have both, we blend them.
+  const profileToUse = deriveEffectiveProfile();
+
+  if (!profileToUse) {
     container.classList.add('hidden');
     return;
   }
 
   // Use the ML model to rank all pets
-  const ranked = PawML.rankPets(userProfile, PETS);
+  const ranked = PawML.rankPets(profileToUse, PETS);
 
-  // Show top 3 (excluding the very best one if already featured, or just show top 3)
+  // Show top 3
   const topMatches = ranked.slice(0, 3);
 
   list.innerHTML = topMatches.map(p => `
@@ -708,6 +831,66 @@ function updateRecommendations() {
   `).join('');
 
   container.classList.remove('hidden');
+}
+
+/**
+ * Combines AI-extracted preferences with manual "Likes" 
+ * to create the best numeric profile for the ML model.
+ */
+function deriveEffectiveProfile() {
+  let finalProfile = userProfile ? { ...userProfile } : null;
+
+  // If we have likes, refine the profile based on them
+  if (heartedPets.size > 0) {
+    const likedPets = Array.from(heartedPets).map(id => PETS.find(p => p.id === id)).filter(Boolean);
+
+    // Simple average of categorical and numeric traits
+    const avgTraits = {
+      wants_dog: likedPets.filter(p => p.type === 'dog').length / likedPets.length,
+      preferred_size: 0,
+      preferred_energy: 0,
+      apartment_friendly: likedPets.filter(p => p.apartment_friendly).length / likedPets.length,
+      has_kids: likedPets.filter(p => p.good_with_kids).length / likedPets.length,
+      max_shedding: 0,
+      alone_tolerance_needed: 0
+    };
+
+    const SIZE_VALS = { small: 0, medium: 0.5, large: 1 };
+    const ENERGY_VALS = { low: 0, medium: 0.5, high: 1 };
+    const SHED_VALS = { low: 0, medium: 0.5, high: 1 };
+
+    likedPets.forEach(p => {
+      avgTraits.preferred_size += SIZE_VALS[p.size] ?? 0.5;
+      avgTraits.preferred_energy += ENERGY_VALS[p.energy] ?? 0.5;
+      avgTraits.max_shedding += SHED_VALS[p.shedding] ?? 0.5;
+      avgTraits.alone_tolerance_needed += SHED_VALS[p.alone_tolerance] ?? 0.5;
+    });
+
+    avgTraits.preferred_size /= likedPets.length;
+    avgTraits.preferred_energy /= likedPets.length;
+    avgTraits.max_shedding /= likedPets.length;
+    avgTraits.alone_tolerance_needed /= likedPets.length;
+
+    // Convert numeric averages back to profile format if starting fresh
+    if (!finalProfile) {
+      finalProfile = {
+        wants_dog: avgTraits.wants_dog > 0.5,
+        preferred_size: avgTraits.preferred_size < 0.33 ? 'small' : avgTraits.preferred_size > 0.66 ? 'large' : 'medium',
+        preferred_energy: avgTraits.preferred_energy < 0.33 ? 'low' : avgTraits.preferred_energy > 0.66 ? 'high' : 'medium',
+        apartment_friendly: avgTraits.apartment_friendly > 0.5,
+        has_kids: avgTraits.has_kids > 0.5,
+        max_shedding: avgTraits.max_shedding < 0.33 ? 'low' : avgTraits.max_shedding > 0.66 ? 'high' : 'medium',
+        alone_tolerance_needed: avgTraits.alone_tolerance_needed < 0.33 ? 'low' : avgTraits.alone_tolerance_needed > 0.66 ? 'high' : 'medium'
+      };
+    } else {
+      // If we already have an AI profile, nudge it slightly towards the user's manual likes
+      // (This is a 70/30 blend)
+      finalProfile.wants_dog = (finalProfile.wants_dog ? 1 : 0) * 0.7 + avgTraits.wants_dog * 0.3 > 0.5;
+      // Note: In a production app, we would blend all 7 traits similarly.
+    }
+  }
+
+  return finalProfile;
 }
 
 /* ──────────────────────
