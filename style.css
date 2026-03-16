@@ -2876,3 +2876,15 @@ input[type="checkbox"] {
 .aim-results.hidden {
   display: none !important;
 }
+/* ── ANIMAL CRUELTY CARD ── */
+.cruelty-card {
+  background: linear-gradient(135deg, rgba(232, 64, 26, 0.08) 0%, rgba(232, 64, 26, 0.03) 100%);
+  border-color: rgba(232, 64, 26, 0.15) !important;
+}
+.cruelty-card .amc-title { 
+  color: #e8401a; 
+}
+.cruelty-card .amc-icon { 
+  background: rgba(232, 64, 26, 0.1); 
+  border-radius: 12px; 
+}

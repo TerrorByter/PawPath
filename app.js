@@ -885,54 +885,52 @@ function deriveEffectiveProfile() {
 
   // If we have likes, refine the profile based on them
   if (heartedPets.size > 0) {
+    // JS Sets preserve insertion order, so the last items are the most recent
     const likedPets = Array.from(heartedPets).map(id => PETS.find(p => p.id === id)).filter(Boolean);
-
-    // Simple average of categorical and numeric traits
-    const avgTraits = {
-      wants_dog: likedPets.filter(p => p.type === 'dog').length / likedPets.length,
-      preferred_size: 0,
-      preferred_energy: 0,
-      apartment_friendly: likedPets.filter(p => p.apartment_friendly).length / likedPets.length,
-      has_kids: likedPets.filter(p => p.good_with_kids).length / likedPets.length,
-      max_shedding: 0,
-      alone_tolerance_needed: 0
-    };
 
     const SIZE_VALS = { small: 0, medium: 0.5, large: 1 };
     const ENERGY_VALS = { low: 0, medium: 0.5, high: 1 };
     const SHED_VALS = { low: 0, medium: 0.5, high: 1 };
 
-    likedPets.forEach(p => {
-      avgTraits.preferred_size += SIZE_VALS[p.size] ?? 0.5;
-      avgTraits.preferred_energy += ENERGY_VALS[p.energy] ?? 0.5;
-      avgTraits.max_shedding += SHED_VALS[p.shedding] ?? 0.5;
-      avgTraits.alone_tolerance_needed += SHED_VALS[p.alone_tolerance] ?? 0.5;
+    // Calculate a weighted average (recency bias)
+    // We give the most recent pets more "votes"
+    let totalWeight = 0;
+    const avgTraits = { wants_dog: 0, preferred_size: 0, preferred_energy: 0, apartment_friendly: 0, has_kids: 0, max_shedding: 0, alone_tolerance_needed: 0 };
+
+    likedPets.forEach((p, index) => {
+      // Weight increases as we get to more recent pets
+      // Last half of likes get double weight
+      const weight = (index >= likedPets.length / 2) ? 2 : 1;
+      totalWeight += weight;
+
+      avgTraits.wants_dog += (p.type === 'dog' ? 1 : 0) * weight;
+      avgTraits.preferred_size += (SIZE_VALS[p.size] ?? 0.5) * weight;
+      avgTraits.preferred_energy += (ENERGY_VALS[p.energy] ?? 0.5) * weight;
+      avgTraits.apartment_friendly += (p.apartment_friendly ? 1 : 0) * weight;
+      avgTraits.has_kids += (p.good_with_kids ? 1 : 0) * weight;
+      avgTraits.max_shedding += (SHED_VALS[p.shedding] ?? 0.5) * weight;
+      avgTraits.alone_tolerance_needed += (SHED_VALS[p.alone_tolerance] ?? 0.5) * weight;
     });
 
-    avgTraits.preferred_size /= likedPets.length;
-    avgTraits.preferred_energy /= likedPets.length;
-    avgTraits.max_shedding /= likedPets.length;
-    avgTraits.alone_tolerance_needed /= likedPets.length;
+    Object.keys(avgTraits).forEach(k => avgTraits[k] /= totalWeight);
 
-    // Convert numeric averages back to profile format if starting fresh
+    // Convert numeric averages to profile (keeping floats for binary traits to allow mixed recommendations)
     if (!finalProfile) {
       finalProfile = {
-        wants_dog: avgTraits.wants_dog > 0.5,
+        wants_dog: avgTraits.wants_dog, // float 0-1
         preferred_size: avgTraits.preferred_size < 0.33 ? 'small' : avgTraits.preferred_size > 0.66 ? 'large' : 'medium',
         preferred_energy: avgTraits.preferred_energy < 0.33 ? 'low' : avgTraits.preferred_energy > 0.66 ? 'high' : 'medium',
-        apartment_friendly: avgTraits.apartment_friendly > 0.5,
-        has_kids: avgTraits.has_kids > 0.5,
+        apartment_friendly: avgTraits.apartment_friendly,
+        has_kids: avgTraits.has_kids,
         max_shedding: avgTraits.max_shedding < 0.33 ? 'low' : avgTraits.max_shedding > 0.66 ? 'high' : 'medium',
         alone_tolerance_needed: avgTraits.alone_tolerance_needed < 0.33 ? 'low' : avgTraits.alone_tolerance_needed > 0.66 ? 'high' : 'medium'
       };
     } else {
-      // If we already have an AI profile, nudge it significantly towards the user's manual likes
-      // (This is a 30/70 blend - 70% weight to manual likes)
-      finalProfile.wants_dog = (finalProfile.wants_dog ? 1 : 0) * 0.3 + avgTraits.wants_dog * 0.7 > 0.5;
-      finalProfile.apartment_friendly = (finalProfile.apartment_friendly ? 1 : 0) * 0.3 + avgTraits.apartment_friendly * 0.7 > 0.5;
-      finalProfile.has_kids = (finalProfile.has_kids ? 1 : 0) * 0.3 + avgTraits.has_kids * 0.7 > 0.5;
+      // Blend AI profile with manual likes (70% weight to manual likes)
+      finalProfile.wants_dog = (finalProfile.wants_dog === true ? 1 : (finalProfile.wants_dog === false ? 0 : finalProfile.wants_dog)) * 0.3 + avgTraits.wants_dog * 0.7;
+      finalProfile.apartment_friendly = (finalProfile.apartment_friendly ? 1 : 0) * 0.3 + avgTraits.apartment_friendly * 0.7;
+      finalProfile.has_kids = (finalProfile.has_kids ? 1 : 0) * 0.3 + avgTraits.has_kids * 0.7;
 
-      // Also adjust categorical traits based on averages
       if (avgTraits.preferred_size < 0.33) finalProfile.preferred_size = 'small';
       else if (avgTraits.preferred_size > 0.66) finalProfile.preferred_size = 'large';
 

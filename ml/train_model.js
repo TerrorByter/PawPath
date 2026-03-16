@@ -148,11 +148,11 @@ const exportCode = `/**
 
   function encodeUser(p) {
     return [
-      p.wants_dog !== undefined ? (p.wants_dog ? 1 : 0) : 0.5,
+      p.wants_dog !== undefined ? Number(p.wants_dog) : 0.5,
       SIZE_MAP[p.preferred_size]          ?? 0.5,
       ENERGY_MAP[p.preferred_energy]      ?? 0.5,
-      p.apartment_friendly ? 1 : 0,
-      p.has_kids           ? 1 : 0,
+      p.apartment_friendly !== undefined ? Number(p.apartment_friendly) : 0.5,
+      p.has_kids !== undefined ? Number(p.has_kids) : 0.5,
       SHEDDING_MAP[p.max_shedding]        ?? 0.5,
       ALONE_MAP[p.alone_tolerance_needed] ?? 0.5,
     ];

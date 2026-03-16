@@ -48,11 +48,11 @@ function encodePet(pet) {
  */
 function encodeUser(prefs) {
     return [
-        prefs.wants_dog !== undefined ? (prefs.wants_dog ? 1 : 0) : 0.5,
+        prefs.wants_dog !== undefined ? Number(prefs.wants_dog) : 0.5,
         SIZE_MAP[prefs.preferred_size] ?? 0.5,
         ENERGY_MAP[prefs.preferred_energy] ?? 0.5,
-        prefs.apartment_friendly ? 1 : 0,
-        prefs.has_kids ? 1 : 0,
+        prefs.apartment_friendly !== undefined ? Number(prefs.apartment_friendly) : 0.5,
+        prefs.has_kids !== undefined ? Number(prefs.has_kids) : 0.5,
         SHEDDING_MAP[prefs.max_shedding] ?? 0.5,
         ALONE_MAP[prefs.alone_tolerance_needed] ?? 0.5,
     ];
@@ -88,9 +88,11 @@ const ARCHETYPES = [
     // Young professional, apartment, gentle dog
     { prefs: { wants_dog: true, preferred_size: 'large', preferred_energy: 'medium', apartment_friendly: false, has_kids: false, max_shedding: 'high', alone_tolerance_needed: 'medium' }, likes: ['buddy'], dislikes: ['luna', 'bella'] },
     // Mixed family, open to either species
-    { prefs: { wants_dog: true, preferred_size: 'medium', preferred_energy: 'medium', apartment_friendly: true, has_kids: true, max_shedding: 'low', alone_tolerance_needed: 'medium' }, likes: ['charlie', 'luna'], dislikes: ['bella', 'max'] },
+    { prefs: { wants_dog: 0.5, preferred_size: 'medium', preferred_energy: 'medium', apartment_friendly: true, has_kids: true, max_shedding: 'low', alone_tolerance_needed: 'medium' }, likes: ['charlie', 'luna'], dislikes: ['bella', 'max'] },
     // Remote worker who wants a dog companion
-    { prefs: { wants_dog: true, preferred_size: 'large', preferred_energy: 'medium', apartment_friendly: false, has_kids: false, max_shedding: 'medium', alone_tolerance_needed: 'low' }, likes: ['buddy', 'max'], dislikes: ['luna', 'bella'] },
+    { prefs: { wants_dog: 1.0, preferred_size: 'large', preferred_energy: 'medium', apartment_friendly: false, has_kids: false, max_shedding: 'medium', alone_tolerance_needed: 'low' }, likes: ['buddy', 'max'], dislikes: ['luna', 'bella'] },
+    // A person who likes both small dogs and small cats
+    { prefs: { wants_dog: 0.5, preferred_size: 'small', preferred_energy: 'low', apartment_friendly: true, has_kids: false, max_shedding: 'medium', alone_tolerance_needed: 'high' }, likes: ['luna', 'bella', 'charlie'], dislikes: ['buddy', 'max'] },
 ];
 
 // ── Build training samples ────────────────────────────────────────
