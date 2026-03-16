@@ -81,17 +81,17 @@ const PETS = [
 // We define representative user-preference profiles and for each
 // profile we specify which pets they would realistically like.
 const ARCHETYPES = [
-    // 1. HARD CAT PERSON: Only wants cats, hates dogs (Luna, Coco, Nala, Bella)
+    // 1. HARD CAT PERSON: Strictly prefers these cats over ANY dogs, including Daisy.
     {
         prefs: { wants_dog: 0.0, preferred_size: 'small', preferred_energy: 'low', apartment_friendly: true, has_kids: false, max_shedding: 'low', alone_tolerance_needed: 'high' },
-        likes: ['luna', 'coco', 'nala', 'bella'],
-        dislikes: ['buddy', 'max', 'charlie', 'daisy', 'cooper', 'oliver']
+        likes: ['luna', 'coco', 'bella', 'nala'],
+        dislikes: ['daisy', 'oliver', 'teddy', 'charlie', 'buddy', 'max', 'cooper']
     },
-    // 2. SOFT CAT PERSON: Prefers cats, but traits match Daisy/Oliver (Luna, Coco, Daisy, Oliver)
+    // 2. SOFT CAT PERSON: Discovery enabled, but cats still win if they fit.
     {
-        prefs: { wants_dog: 0.2, preferred_size: 'small', preferred_energy: 'low', apartment_friendly: true, has_kids: true, max_shedding: 'low', alone_tolerance_needed: 'high' },
-        likes: ['luna', 'coco', 'daisy', 'oliver'],
-        dislikes: ['max', 'buddy', 'cooper', 'cleo']
+        prefs: { wants_dog: 0.1, preferred_size: 'small', preferred_energy: 'low', apartment_friendly: true, has_kids: true, max_shedding: 'low', alone_tolerance_needed: 'high' },
+        likes: ['luna', 'coco', 'nala', 'bella'],
+        dislikes: ['max', 'buddy', 'cooper']
     },
     // 3. HARD DOG PERSON: Only wants dogs, ignores cats
     {
@@ -101,7 +101,7 @@ const ARCHETYPES = [
     },
     // 4. SOFT DOG PERSON: Wants dog, but might take a high-energy cat (Simba, Cleo)
     {
-        prefs: { wants_dog: 0.8, preferred_size: 'medium', preferred_energy: 'high', apartment_friendly: true, has_kids: true, max_shedding: 'medium', alone_tolerance_needed: 'medium' },
+        prefs: { wants_dog: 0.9, preferred_size: 'medium', preferred_energy: 'high', apartment_friendly: true, has_kids: true, max_shedding: 'medium', alone_tolerance_needed: 'medium' },
         likes: ['charlie', 'bailey', 'simba', 'cleo'],
         dislikes: ['luna', 'bella', 'coco']
     },
@@ -109,7 +109,7 @@ const ARCHETYPES = [
     {
         prefs: { wants_dog: 0.0, preferred_size: 'small', preferred_energy: 'low', apartment_friendly: true, has_kids: false, max_shedding: 'medium', alone_tolerance_needed: 'high' },
         likes: ['bella', 'luna', 'coco', 'milo', 'nala'],
-        dislikes: ['max', 'buddy', 'cooper', 'charlie']
+        dislikes: ['max', 'buddy', 'cooper', 'charlie', 'daisy']
     },
     // 6. FAMILY SMALL (Daisy/Teddy/Oliver)
     {
