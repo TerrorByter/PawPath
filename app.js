@@ -811,9 +811,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Initial recommendation run
-  if (userProfile || heartedPets.size > 0) {
-    updateRecommendations();
-  }
+  updateRecommendations();
 });
 
 /* ──────────────────────
