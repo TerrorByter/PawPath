@@ -845,7 +845,10 @@ function updateRecommendations() {
   }
 
   // Use the ML model to rank all pets
-  const ranked = PawML.rankPets(profileToUse, PETS);
+  let ranked = PawML.rankPets(profileToUse, PETS);
+
+  // Filter out pets that are already hearted by the user
+  ranked = ranked.filter(p => !heartedPets.has(p.id));
 
   // Show top 3
   const topMatches = ranked.slice(0, 3);
