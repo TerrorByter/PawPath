@@ -11,35 +11,105 @@ const PETS = [
         size: 'large', age: '2 years', img: 'assets/buddy.jpg',
         energy: 'medium', apartment_friendly: false,
         good_with_kids: true, shedding: 'high', alone_tolerance: 'medium',
-        description: 'A gentle and loving companion who enjoys outdoor walks and cuddles. Great with kids and other pets. Fully house-trained and responds well to commands.'
+        description: 'A gentle and loving companion who enjoys outdoor walks and cuddles. Great with kids and other pets. Fully house-trained.'
     },
     {
         id: 'luna', name: 'Luna', species: 'cat', breed: 'Tabby Cat',
         size: 'small', age: '1 year', img: 'assets/luna.jpg',
         energy: 'low', apartment_friendly: true,
         good_with_kids: false, shedding: 'low', alone_tolerance: 'high',
-        description: 'A curious and playful tabby who loves sunny window spots. Gentle, quiet and very low-maintenance — perfect for apartment living.'
+        description: 'A curious and playful tabby who loves sunny window spots. Gentle and perfect for apartment living.'
     },
     {
         id: 'max', name: 'Max', species: 'dog', breed: 'Black Labrador',
         size: 'large', age: '3 years', img: 'assets/max.jpg',
         energy: 'high', apartment_friendly: false,
         good_with_kids: true, shedding: 'medium', alone_tolerance: 'low',
-        description: 'A healthy, energetic Labrador who needs an active family with a yard. Fully trained and loves to swim. Currently in urgent need of a home.'
+        description: 'An energetic Labrador who needs an active family with a yard. Fully trained and loves to swim.'
     },
     {
         id: 'bella', name: 'Bella', species: 'cat', breed: 'Persian Cat',
         size: 'small', age: '4 years', img: 'assets/bella.jpg',
         energy: 'low', apartment_friendly: true,
         good_with_kids: false, shedding: 'medium', alone_tolerance: 'high',
-        description: 'A gorgeous white Persian with piercing blue eyes. Loves quiet homes and rewards you with head-bumps and purrs. Requires regular grooming.'
+        description: 'A gorgeous Persian who loves quiet homes. Rewards you with head-bumps and purrs.'
     },
     {
         id: 'charlie', name: 'Charlie', species: 'dog', breed: 'Beagle',
         size: 'medium', age: '1.5 years', img: 'assets/charlie.jpg',
         energy: 'medium', apartment_friendly: true,
         good_with_kids: true, shedding: 'low', alone_tolerance: 'medium',
-        description: 'A joyful Beagle who gets along with everyone — kids, dogs and cats. Thrives with regular walks and playtime. Great personality for families.'
+        description: 'A joyful Beagle who gets along with everyone. Thrives with regular walks and playtime.'
+    },
+    {
+        id: 'daisy', name: 'Daisy', species: 'dog', breed: 'Pembroke Welsh Corgi',
+        size: 'small', age: '1 year', img: 'assets/daisy.jpg',
+        energy: 'low', apartment_friendly: true,
+        good_with_kids: true, shedding: 'medium', alone_tolerance: 'high',
+        description: 'A spirited Corgi who loves attention and short walks. Perfect for a loving family home.'
+    },
+    {
+        id: 'milo', name: 'Milo', species: 'cat', breed: 'Orange Tabby',
+        size: 'small', age: '2 years', img: 'assets/milo.jpg',
+        energy: 'medium', apartment_friendly: true,
+        good_with_kids: false, shedding: 'medium', alone_tolerance: 'high',
+        description: 'A classic orange tabby with a heart of gold. Loves human company and head scratches.'
+    },
+    {
+        id: 'cooper', name: 'Cooper', species: 'dog', breed: 'Border Collie',
+        size: 'large', age: '2.5 years', img: 'assets/cooper.jpg',
+        energy: 'high', apartment_friendly: false,
+        good_with_kids: true, shedding: 'high', alone_tolerance: 'low',
+        description: 'Highly intelligent and needs a job to do. Ideal for an active owner.'
+    },
+    {
+        id: 'coco', name: 'Coco', species: 'cat', breed: 'Siamese',
+        size: 'small', age: '3 years', img: 'assets/coco.jpg',
+        energy: 'low', apartment_friendly: true,
+        good_with_kids: false, shedding: 'low', alone_tolerance: 'high',
+        description: 'A beautiful Siamese who loves attention. Very vocal and loyal.'
+    },
+    {
+        id: 'oliver', name: 'Oliver', species: 'dog', breed: 'French Bulldog',
+        size: 'small', age: '4 years', img: 'assets/oliver.jpg',
+        energy: 'low', apartment_friendly: true,
+        good_with_kids: true, shedding: 'low', alone_tolerance: 'medium',
+        description: 'A typical Frenchie who loves napping. Low maintenance and great with kids.'
+    },
+    {
+        id: 'simba', name: 'Simba', species: 'cat', breed: 'Maine Coon Mix',
+        size: 'medium', age: '5 years', img: 'assets/simba.jpg',
+        energy: 'high', apartment_friendly: true,
+        good_with_kids: true, shedding: 'medium', alone_tolerance: 'medium',
+        description: 'A large, fluffy ginger cat. True gentle giant who loves lounging.'
+    },
+    {
+        id: 'bailey', name: 'Bailey', species: 'dog', breed: 'Cocker Spaniel',
+        size: 'medium', age: '2 years', img: 'assets/bailey.jpg',
+        energy: 'medium', apartment_friendly: true,
+        good_with_kids: true, shedding: 'high', alone_tolerance: 'medium',
+        description: 'A sweet and happy Cocker Spaniel who loves everyone she meets.'
+    },
+    {
+        id: 'nala', name: 'Nala', species: 'cat', breed: 'Calico',
+        size: 'small', age: '1.5 years', img: 'assets/nala.jpg',
+        energy: 'low', apartment_friendly: true,
+        good_with_kids: false, shedding: 'medium', alone_tolerance: 'high',
+        description: 'Independent and quiet. Enjoys watching the world from a high bookshelf.'
+    },
+    {
+        id: 'teddy', name: 'Teddy', species: 'dog', breed: 'Toy Poodle',
+        size: 'small', age: '3 years', img: 'assets/teddy.jpg',
+        energy: 'medium', apartment_friendly: true,
+        good_with_kids: true, shedding: 'low', alone_tolerance: 'high',
+        description: 'Charming and clever. Hypoallergenic and learns tricks quickly.'
+    },
+    {
+        id: 'cleo', name: 'Cleo', species: 'cat', breed: 'Abyssinian',
+        size: 'small', age: '2 years', img: 'assets/cleo.jpg',
+        energy: 'high', apartment_friendly: true,
+        good_with_kids: false, shedding: 'low', alone_tolerance: 'medium',
+        description: 'Sleek and active. Loves to climb and explore. Very inquisitive.'
     }
 ];
 
@@ -53,8 +123,9 @@ function setCorsHeaders(res) {
 // Deterministic hard-filter using extracted preferences
 function filterPets(pets, prefs) {
     return pets.filter(pet => {
-        // Species must match if specified
-        if (prefs.species && prefs.species !== 'any' && pet.species !== prefs.species) return false;
+        // Species filter: removed hard exclusion to allow discovery of similar pets 
+        // across species if characteristics match (as requested by user).
+
         // Apartment: only exclude if user needs apartment-friendly AND pet is not
         if (prefs.apartment_friendly === true && !pet.apartment_friendly) return false;
         // Kids: only exclude if user has kids AND pet is not good with kids

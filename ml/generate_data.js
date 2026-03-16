@@ -64,35 +64,43 @@ const PETS = [
     { id: 'luna', species: 'cat', size: 'small', energy: 'low', apartment_friendly: true, good_with_kids: false, shedding: 'low', alone_tolerance: 'high' },
     { id: 'max', species: 'dog', size: 'large', energy: 'high', apartment_friendly: false, good_with_kids: true, shedding: 'medium', alone_tolerance: 'low' },
     { id: 'bella', species: 'cat', size: 'small', energy: 'low', apartment_friendly: true, good_with_kids: false, shedding: 'medium', alone_tolerance: 'high' },
-    { id: 'charlie', species: 'dog', size: 'medium', energy: 'medium', apartment_friendly: true, good_with_kids: true, shedding: 'low', alone_tolerance: 'medium' },
+    { id: 'charlie', species: 'dog', species: 'dog', size: 'medium', energy: 'medium', apartment_friendly: true, good_with_kids: true, shedding: 'low', alone_tolerance: 'medium' },
+    { id: 'daisy', species: 'dog', size: 'small', energy: 'low', apartment_friendly: true, good_with_kids: true, shedding: 'medium', alone_tolerance: 'high' },
+    { id: 'milo', species: 'cat', size: 'small', energy: 'medium', apartment_friendly: true, good_with_kids: false, shedding: 'medium', alone_tolerance: 'high' },
+    { id: 'cooper', species: 'dog', size: 'large', energy: 'high', apartment_friendly: false, good_with_kids: true, shedding: 'high', alone_tolerance: 'low' },
+    { id: 'coco', species: 'cat', size: 'small', energy: 'low', apartment_friendly: true, good_with_kids: false, shedding: 'low', alone_tolerance: 'high' },
+    { id: 'oliver', species: 'dog', size: 'small', energy: 'low', apartment_friendly: true, good_with_kids: true, shedding: 'low', alone_tolerance: 'medium' },
+    { id: 'simba', species: 'cat', size: 'medium', energy: 'high', apartment_friendly: true, good_with_kids: true, shedding: 'medium', alone_tolerance: 'medium' },
+    { id: 'bailey', species: 'dog', size: 'medium', energy: 'medium', apartment_friendly: true, good_with_kids: true, shedding: 'high', alone_tolerance: 'medium' },
+    { id: 'nala', species: 'cat', size: 'small', energy: 'low', apartment_friendly: true, good_with_kids: false, shedding: 'medium', alone_tolerance: 'high' },
+    { id: 'teddy', species: 'dog', size: 'small', energy: 'medium', apartment_friendly: true, good_with_kids: true, shedding: 'low', alone_tolerance: 'high' },
+    { id: 'cleo', species: 'cat', size: 'small', energy: 'high', apartment_friendly: true, good_with_kids: false, shedding: 'low', alone_tolerance: 'medium' }
 ];
 
 // ── User-preference archetypes ────────────────────────────────────
 // We define representative user-preference profiles and for each
 // profile we specify which pets they would realistically like.
 const ARCHETYPES = [
-    // Apartment cat person, works long hours
-    { prefs: { wants_dog: false, preferred_size: 'small', preferred_energy: 'low', apartment_friendly: true, has_kids: false, max_shedding: 'low', alone_tolerance_needed: 'high' }, likes: ['luna', 'bella'], dislikes: ['buddy', 'max', 'charlie'] },
-    // Active family with a yard, kids
-    { prefs: { wants_dog: true, preferred_size: 'large', preferred_energy: 'high', apartment_friendly: false, has_kids: true, max_shedding: 'high', alone_tolerance_needed: 'low' }, likes: ['max', 'buddy'], dislikes: ['luna', 'bella'] },
-    // Apartment dweller who wants a small dog
-    { prefs: { wants_dog: true, preferred_size: 'medium', preferred_energy: 'medium', apartment_friendly: true, has_kids: true, max_shedding: 'low', alone_tolerance_needed: 'medium' }, likes: ['charlie'], dislikes: ['luna', 'bella', 'max'] },
-    // Quiet home, no kids, wants calm cat
-    { prefs: { wants_dog: false, preferred_size: 'small', preferred_energy: 'low', apartment_friendly: true, has_kids: false, max_shedding: 'medium', alone_tolerance_needed: 'high' }, likes: ['bella', 'luna'], dislikes: ['buddy', 'max', 'charlie'] },
-    // Outdoorsy jogger who wants high-energy dog
-    { prefs: { wants_dog: true, preferred_size: 'large', preferred_energy: 'high', apartment_friendly: false, has_kids: false, max_shedding: 'medium', alone_tolerance_needed: 'low' }, likes: ['max'], dislikes: ['luna', 'bella', 'charlie'] },
-    // Family looking for friendly medium dog
-    { prefs: { wants_dog: true, preferred_size: 'medium', preferred_energy: 'medium', apartment_friendly: true, has_kids: true, max_shedding: 'low', alone_tolerance_needed: 'medium' }, likes: ['charlie', 'buddy'], dislikes: ['luna', 'bella'] },
-    // Senior person, wants calm small pet
-    { prefs: { wants_dog: false, preferred_size: 'small', preferred_energy: 'low', apartment_friendly: true, has_kids: false, max_shedding: 'low', alone_tolerance_needed: 'high' }, likes: ['luna'], dislikes: ['max', 'buddy', 'charlie'] },
-    // Young professional, apartment, gentle dog
-    { prefs: { wants_dog: true, preferred_size: 'large', preferred_energy: 'medium', apartment_friendly: false, has_kids: false, max_shedding: 'high', alone_tolerance_needed: 'medium' }, likes: ['buddy'], dislikes: ['luna', 'bella'] },
-    // Mixed family, open to either species
-    { prefs: { wants_dog: 0.5, preferred_size: 'medium', preferred_energy: 'medium', apartment_friendly: true, has_kids: true, max_shedding: 'low', alone_tolerance_needed: 'medium' }, likes: ['charlie', 'luna'], dislikes: ['bella', 'max'] },
-    // Remote worker who wants a dog companion
-    { prefs: { wants_dog: 1.0, preferred_size: 'large', preferred_energy: 'medium', apartment_friendly: false, has_kids: false, max_shedding: 'medium', alone_tolerance_needed: 'low' }, likes: ['buddy', 'max'], dislikes: ['luna', 'bella'] },
-    // A person who likes both small dogs and small cats
-    { prefs: { wants_dog: 0.5, preferred_size: 'small', preferred_energy: 'low', apartment_friendly: true, has_kids: false, max_shedding: 'medium', alone_tolerance_needed: 'high' }, likes: ['luna', 'bella', 'charlie'], dislikes: ['buddy', 'max'] },
+    // Apartment cat person, works long hours (Luna, Bella, Coco, Nala)
+    { prefs: { wants_dog: 0.0, preferred_size: 'small', preferred_energy: 'low', apartment_friendly: true, has_kids: false, max_shedding: 'low', alone_tolerance_needed: 'high' }, likes: ['luna', 'bella', 'coco', 'nala'], dislikes: ['buddy', 'max', 'cooper', 'cleo', 'daisy'] },
+    // Active family with a yard, kids (Max, Buddy, Cooper, Simba)
+    { prefs: { wants_dog: 1.0, preferred_size: 'large', preferred_energy: 'high', apartment_friendly: false, has_kids: true, max_shedding: 'high', alone_tolerance_needed: 'low' }, likes: ['max', 'buddy', 'cooper', 'simba'], dislikes: ['luna', 'bella', 'coco'] },
+    // Apartment dweller who wants a small dog (Charlie, Oliver, Daisy)
+    { prefs: { wants_dog: 1.0, preferred_size: 'small', preferred_energy: 'low', apartment_friendly: true, has_kids: true, max_shedding: 'low', alone_tolerance_needed: 'medium' }, likes: ['charlie', 'oliver', 'daisy', 'teddy'], dislikes: ['luna', 'max', 'buddy'] },
+    // Quiet home, no kids, wants calm cat (Bella, Luna, Coco, Milo)
+    { prefs: { wants_dog: 0.0, preferred_size: 'small', preferred_energy: 'low', apartment_friendly: true, has_kids: false, max_shedding: 'medium', alone_tolerance_needed: 'high' }, likes: ['bella', 'luna', 'coco', 'milo'], dislikes: ['buddy', 'max', 'cooper', 'daisy'] },
+    // Outdoorsy jogger who wants high-energy dog (Max, Cooper)
+    { prefs: { wants_dog: 1.0, preferred_size: 'large', preferred_energy: 'high', apartment_friendly: false, has_kids: false, max_shedding: 'medium', alone_tolerance_needed: 'low' }, likes: ['max', 'cooper'], dislikes: ['luna', 'bella', 'charlie'] },
+    // Family looking for friendly medium dog (Charlie, Bailey, Teddy)
+    { prefs: { wants_dog: 1.0, preferred_size: 'medium', preferred_energy: 'medium', apartment_friendly: true, has_kids: true, max_shedding: 'low', alone_tolerance_needed: 'medium' }, likes: ['charlie', 'bailey', 'teddy', 'buddy'], dislikes: ['luna', 'cleo'] },
+    // Senior person, wants calm small pet (Luna, Nala, Oliver, Daisy)
+    { prefs: { wants_dog: 0.2, preferred_size: 'small', preferred_energy: 'low', apartment_friendly: true, has_kids: false, max_shedding: 'low', alone_tolerance_needed: 'high' }, likes: ['luna', 'nala', 'oliver', 'daisy'], dislikes: ['max', 'buddy', 'cooper'] },
+    // Young professional, apartment, gentle dog (Buddy, Bailey, Teddy)
+    { prefs: { wants_dog: 1.0, preferred_size: 'medium', preferred_energy: 'medium', apartment_friendly: true, has_kids: false, max_shedding: 'high', alone_tolerance_needed: 'medium' }, likes: ['buddy', 'bailey', 'teddy'], dislikes: ['luna', 'bella'] },
+    // Mixed family, open to either species (Charlie, Luna, Simba, Bailey)
+    { prefs: { wants_dog: 0.5, preferred_size: 'medium', preferred_energy: 'medium', apartment_friendly: true, has_kids: true, max_shedding: 'low', alone_tolerance_needed: 'medium' }, likes: ['charlie', 'luna', 'simba', 'bailey'], dislikes: ['max', 'cooper'] },
+    // Remote worker who wants a dog companion (Buddy, Max, Daisy)
+    { prefs: { wants_dog: 1.0, preferred_size: 'large', preferred_energy: 'medium', apartment_friendly: false, has_kids: false, max_shedding: 'medium', alone_tolerance_needed: 'low' }, likes: ['buddy', 'max', 'daisy'], dislikes: ['luna', 'bella'] },
 ];
 
 // ── Build training samples ────────────────────────────────────────
