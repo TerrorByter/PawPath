@@ -769,8 +769,11 @@ function sign_out() {
   localStorage.removeItem('pawpath_hearts');
   userProfile = null;
   heartedPets = new Set();
+
+  // Refresh UI
   renderPetGrid('all');
   updateRecommendations();
+
   showToast('Signed out! Session cleared.');
   goScreen('screen-home');
 }
@@ -832,7 +835,12 @@ function updateRecommendations() {
   const profileToUse = deriveEffectiveProfile();
 
   if (!profileToUse) {
-    container.classList.add('hidden');
+    list.innerHTML = `
+      <div class="ml-empty-state">
+        <div class="mes-icon">🐾</div>
+        <div class="mes-text">No recommendations yet.</div>
+        <div class="mes-sub">Heart some pets or use our AI Match to get personalized matches!</div>
+      </div>`;
     return;
   }
 
