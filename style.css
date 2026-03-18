@@ -2908,7 +2908,15 @@ input[type="checkbox"] {
 }
 
 .cruelty-card .amc-title {
-  color: #e8401a;
+  color: #C83010;
+}
+
+.cruelty-card .amc-sub {
+  color: rgba(200, 48, 16, 0.75);
+}
+
+.cruelty-card .amc-arrow {
+  color: #C83010;
 }
 
 .cruelty-card .amc-icon {
