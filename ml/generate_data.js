@@ -102,16 +102,13 @@ const PETS = [
 // ---------------------------------------------------------------------------
 
 // Number of synthetic users to generate – can be overridden via .env
-const SYNTH_USER_COUNT = parseInt(process.env.SYNTH_USER_COUNT, 10) || 5000;
+const SYNTH_USER_COUNT = parseInt(process.env.SYNTH_USER_COUNT, 10) || 150;
 // Compatibility threshold for a pet to be considered "liked" by a synthetic user
 const POSITIVE_THRESHOLD = parseFloat(process.env.POSITIVE_THRESHOLD) || 0.5;
 
 /** Helper: sample a Dirichlet distribution with α = 1 (uniform) for 6 species */
-function sampleSpeciesPrefs() {
-    const draws = Array.from({ length: 6 }, () => Math.random());
-    const sum = draws.reduce((a, b) => a + b, 0);
-    return draws.map(v => v / sum);
-}
+// Array of species to pick from
+const SPECIES_LIST = ['dog', 'cat', 'rabbit', 'guinea_pig', 'hamster', 'terrapin'];
 
 /** Helper: map a numeric preference (0‑1) to a categorical value used by encodeUser */
 function mapToCategory(value, low, medium, high) {
@@ -122,19 +119,18 @@ function mapToCategory(value, low, medium, high) {
 
 /** Generate a synthetic user preference object compatible with encodeUser */
 function generateSyntheticUser() {
-    const [wDog, wCat, wRabbit, wGuinea, wHamster, wTerrapin] = sampleSpeciesPrefs();
+    // Pick a random primary species focus
+    const favoredSpecies = SPECIES_LIST[Math.floor(Math.random() * SPECIES_LIST.length)];
+    const wDog = SPECIES_MAP[favoredSpecies]; // match the format app.js sends 
+
     const prefSizeNum = Math.random(); // 0‑1
     const prefEnergyNum = Math.random();
     const sheddingNum = Math.random();
     const aloneNum = Math.random();
 
     return {
-        wants_dog: wDog,
-        wants_cat: wCat,
-        wants_rabbit: wRabbit,
-        wants_guinea_pig: wGuinea,
-        wants_hamster: wHamster,
-        wants_terrapin: wTerrapin,
+        wants_dog: wDog, // Float representing the species mapped
+        favored_species_string: favoredSpecies, // Used purely for ground truth label below
         preferred_size: mapToCategory(prefSizeNum, 'small', 'medium', 'large'),
         preferred_energy: mapToCategory(prefEnergyNum, 'low', 'medium', 'high'),
         apartment_friendly: Math.random() < 0.7, // most users live in apartments
@@ -144,35 +140,14 @@ function generateSyntheticUser() {
     };
 }
 
-/** Build a one‑hot species vector for a pet */
-function speciesVector(pet) {
-    return [
-        pet.species === 'dog' ? 1 : 0,
-        pet.species === 'cat' ? 1 : 0,
-        pet.species === 'rabbit' ? 1 : 0,
-        pet.species === 'guinea_pig' ? 1 : 0,
-        pet.species === 'hamster' ? 1 : 0,
-        pet.species === 'terrapin' ? 1 : 0,
-    ];
-}
-
 /** Compute a simple compatibility score between a user and a pet */
 function compatibilityScore(userPrefs, pet) {
-    const speciesPrefs = [
-        userPrefs.wants_dog ?? 0,
-        userPrefs.wants_cat ?? 0,
-        userPrefs.wants_rabbit ?? 0,
-        userPrefs.wants_guinea_pig ?? 0,
-        userPrefs.wants_hamster ?? 0,
-        userPrefs.wants_terrapin ?? 0,
-    ];
-    const petSpeciesVec = speciesVector(pet);
-    // dot‑product of species preferences
-    const dot = speciesPrefs.reduce((sum, val, i) => sum + val * petSpeciesVec[i], 0);
-    // optional: add small boost if energy/size match user preferences
+    // Exact species match gives a base 0.8
+    const speciesMatch = (userPrefs.favored_species_string === pet.species) ? 0.8 : 0;
+    // Boost if energy/size match user preferences
     const energyMatch = (userPrefs.preferred_energy === pet.energy) ? 0.1 : 0;
     const sizeMatch = (userPrefs.preferred_size === pet.size) ? 0.1 : 0;
-    return dot + energyMatch + sizeMatch;
+    return speciesMatch + energyMatch + sizeMatch;
 }
 
 /** Generate synthetic users */
