@@ -35,7 +35,6 @@
     overflow-x: hidden;
   }
 
-  /* ── NOISE TEXTURE OVERLAY ── */
   body::before {
     content: '';
     position: fixed; inset: 0;
@@ -43,7 +42,6 @@
     pointer-events: none; z-index: 0; opacity: .4;
   }
 
-  /* ── TOP NAV ── */
   .nav {
     background: rgba(245,240,235,.95);
     backdrop-filter: blur(20px);
@@ -52,9 +50,7 @@
     display: flex; align-items: center; justify-content: space-between;
     position: sticky; top: 0; z-index: 99;
   }
-  .nav-logo {
-    display: flex; align-items: center; gap: 10px;
-  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; }
   .nav-logo .paw {
     width: 36px; height: 36px; background: var(--red);
     border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -71,7 +67,6 @@
   }
   .nav-btn:hover { background: var(--card2); }
 
-  /* ── HERO BANNER ── */
   .hero {
     padding: 28px 20px 20px;
     position: relative; overflow: hidden;
@@ -98,11 +93,7 @@
   .hero h1 em { font-style: normal; color: var(--orange); }
   .hero p { color: var(--text-soft); font-size: 14px; line-height: 1.6; max-width: 320px; }
 
-  /* ── TAB SWITCHER ── */
-  .tab-wrap {
-    padding: 16px 20px 0;
-    display: flex; gap: 10px;
-  }
+  .tab-wrap { padding: 16px 20px 0; display: flex; gap: 10px; }
   .tab-btn {
     flex: 1; padding: 12px 10px;
     border-radius: var(--radius-sm); border: 1.5px solid var(--border);
@@ -112,22 +103,14 @@
     justify-content: center; gap: 7px; transition: all .25s;
     letter-spacing: .2px;
   }
-  .tab-btn.active-cruelty {
-    background: rgba(232,64,26,.1); border-color: var(--red);
-    color: #C83010;
-  }
-  .tab-btn.active-lost {
-    background: rgba(30,27,75,.1); border-color: var(--lost);
-    color: var(--lost);
-  }
+  .tab-btn.active-cruelty { background: rgba(232,64,26,.1); border-color: var(--red); color: #C83010; }
+  .tab-btn.active-lost { background: rgba(30,27,75,.1); border-color: var(--lost); color: var(--lost); }
   .tab-btn:hover:not(.active-cruelty):not(.active-lost) { border-color: #C8BFB5; background: var(--card2); }
 
-  /* ── PANELS ── */
   .panel { display: none; animation: fadeUp .35s ease; }
   .panel.active { display: block; }
   @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
 
-  /* ── SECTION ── */
   .section { padding: 20px 20px 0; }
   .section-label {
     font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700;
@@ -136,7 +119,6 @@
   }
   .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
 
-  /* ── UPLOAD ZONE ── */
   .upload-zone {
     border: 2px dashed var(--border); border-radius: var(--radius);
     padding: 32px 20px; text-align: center;
@@ -169,7 +151,6 @@
     font-size: 14px; display: flex; align-items: center; justify-content: center;
   }
 
-  /* ── AI ANALYSIS CARD ── */
   .ai-card {
     border-radius: var(--radius); background: var(--card);
     border: 1px solid var(--border); overflow: hidden; margin-top: 12px;
@@ -186,15 +167,10 @@
     border-radius: 8px; display: flex; align-items: center;
     justify-content: center; font-size: 14px;
   }
-  .ai-card-header .ai-title {
-    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px;
-  }
+  .ai-card-header .ai-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; }
   .ai-card-header .ai-sub { font-size: 11px; color: var(--text-soft); }
   .ai-body { padding: 14px 16px; }
-  .urgency-row {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 12px;
-  }
+  .urgency-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
   .urgency-label { font-size: 13px; color: var(--text-soft); }
   .urgency-badge {
     display: inline-flex; align-items: center; gap: 6px;
@@ -219,7 +195,6 @@
   @keyframes scanAI { from{width:0} to{width:100%} }
   .ai-confidence { font-size: 11px; color: var(--text-soft); text-align: right; }
 
-  /* ── FORM FIELDS ── */
   .field { margin-bottom: 14px; }
   .field-label {
     font-size: 12px; font-weight: 600; color: var(--text-soft);
@@ -247,10 +222,25 @@
     font-size: 16px; pointer-events: none;
   }
 
-  /* ── DATE-TIME ROW ── */
+  /* ── SEVERITY VISUAL SELECTOR ── */
+  .severity-toggle { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .severity-opt { position: relative; }
+  .severity-opt input[type=radio] { position: absolute; opacity: 0; width: 0; }
+  .severity-opt label {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    padding: 12px 8px; border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border); cursor: pointer;
+    background: var(--card); transition: all .2s; text-align: center;
+  }
+  .severity-opt label .sev-icon { font-size: 22px; }
+  .severity-opt label .sev-label { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; }
+  .severity-opt label .sev-sub { font-size: 10px; color: var(--muted); line-height: 1.3; }
+  .severity-opt input:checked + label.mild { border-color: var(--green); background: rgba(46,168,85,.1); }
+  .severity-opt input:checked + label.moderate { border-color: var(--orange); background: rgba(242,106,27,.1); }
+  .severity-opt input:checked + label.severe { border-color: var(--red); background: rgba(232,64,26,.1); }
+
   .dt-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-  /* ── ALIVE/DEAD TOGGLE ── */
   .status-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .status-opt { position: relative; }
   .status-opt input[type=radio] { position: absolute; opacity: 0; width: 0; }
@@ -265,9 +255,7 @@
   .status-opt label .s-sub { font-size: 11px; color: var(--text-soft); }
   .status-opt input:checked + label.alive { border-color: var(--green); background: rgba(46,168,85,.1); }
   .status-opt input:checked + label.dead { border-color: var(--red); background: rgba(232,52,26,.1); }
-  .status-opt input:checked + label.unknown { border-color: var(--orange); background: rgba(242,106,27,.1); }
 
-  /* ── SUSPECT PILL INPUT ── */
   .pill-wrap {
     display: flex; flex-wrap: wrap; gap: 6px;
     background: var(--card); border: 1.5px solid var(--border);
@@ -289,27 +277,15 @@
     font-family: 'DM Sans', sans-serif; padding: 2px 4px;
   }
 
-  /* ── USE LOCATION BUTTON ── */
   .btn-use-location {
-    background: #C83010;
-    color: #fff;
-    border: 1.5px solid var(--red);
-    font-size: 13px;
-    padding: 10px;
-    border-radius: var(--radius-sm);
-    margin-bottom: 14px;
-    box-shadow: none;
-    cursor: pointer;
-    font-family: inherit;
-    font-weight: 600;
-    transition: all 0.2s;
-    width: 100%;
+    background: #C83010; color: #fff;
+    border: 1.5px solid var(--red); font-size: 13px;
+    padding: 10px; border-radius: var(--radius-sm);
+    margin-bottom: 14px; box-shadow: none; cursor: pointer;
+    font-family: inherit; font-weight: 600; transition: all 0.2s; width: 100%;
   }
-  .btn-use-location:active {
-    transform: scale(0.98);
-  }
+  .btn-use-location:active { transform: scale(0.98); }
 
-  /* ── SUBMIT BUTTON ── */
   .btn-submit {
     width: 100%; padding: 16px;
     border-radius: var(--radius); border: none; cursor: pointer;
@@ -333,7 +309,6 @@
     pointer-events: none;
   }
 
-  /* ── SUCCESS TOAST ── */
   .toast {
     position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
     background: #FFFFFF; border: 1px solid var(--border);
@@ -348,7 +323,6 @@
   .toast.success .t-icon { background: rgba(46,168,85,.15); color: var(--green); }
   .toast.error .t-icon { background: rgba(232,64,26,.15); color: var(--red); }
 
-  /* ── LOST & FOUND SPECIFIC ── */
   .lf-mode-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 18px; }
   .lf-mode-btn {
     padding: 14px 10px; border-radius: var(--radius-sm);
@@ -361,86 +335,36 @@
   .lf-mode-btn .m-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; }
   .lf-mode-btn .m-sub { font-size: 11px; color: var(--text-soft); }
 
-  /* ── RADIUS ALERT PREVIEW ── */
   .alert-preview {
     background: var(--card); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 16px; margin-top: 12px;
-    display: none;
+    border-radius: var(--radius); padding: 16px; margin-top: 12px; display: none;
   }
   .alert-preview.show { display: block; animation: fadeUp .3s ease; }
   .alert-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
   .alert-icon-wrap { width: 36px; height: 36px; border-radius: 50%; background: rgba(30,27,75,.1); display: flex; align-items: center; justify-content: center; font-size: 18px; }
   .alert-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; }
   .alert-sub { font-size: 12px; color: var(--text-soft); }
-  .alert-notification {
-    background: var(--card2); border: 1px solid var(--border);
-    border-radius: 12px; padding: 12px 14px;
-  }
+  .alert-notification { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
   .alert-notif-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-  .alert-notif-top .app-tag {
-    font-size: 11px; font-weight: 600; color: var(--orange); text-transform: uppercase; letter-spacing: .5px;
-  }
+  .alert-notif-top .app-tag { font-size: 11px; font-weight: 600; color: var(--orange); text-transform: uppercase; letter-spacing: .5px; }
   .alert-notif-top .notif-time { font-size: 11px; color: var(--muted); margin-left: auto; }
   .alert-notif-msg { font-size: 13px; line-height: 1.5; }
   .alert-radius { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 12px; color: var(--text-soft); }
   .alert-radius .r-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
 
-  /* ── BREED CHIPS ── */
   .breed-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
   .breed-chip {
     padding: 5px 12px; border-radius: 20px; font-size: 12px;
     background: var(--card2); border: 1px solid var(--border);
     color: var(--text-soft); cursor: pointer; transition: all .2s;
   }
-  .breed-chip:hover, .breed-chip.selected {
-    background: rgba(242,106,27,.12); border-color: var(--orange); color: #C06010;
-  }
+  .breed-chip:hover, .breed-chip.selected { background: rgba(242,106,27,.12); border-color: var(--orange); color: #C06010; }
 
-  /* ── SPACER ── */
-  .spacer { height: 20px; }
-  .spacer-lg { height: 100px; }
-
-  /* ── DIVIDER ── */
-  .divider { height: 1px; background: var(--border); margin: 8px 0; }
-
-  /* ── CHAR COUNTER ── */
-  .char-row { display: flex; justify-content: flex-end; margin-top: 4px; }
-  .char-count { font-size: 11px; color: var(--muted); }
-
-  /* ── HELPER TEXT ── */
-  .helper { font-size: 11px; color: var(--muted); margin-top: 5px; display: flex; align-items: center; gap: 5px; }
-
-  /* ── SCANNING ANIMATION ── */
-  .scan-overlay {
-    display: none; position: absolute; inset: 0;
-    background: rgba(245,240,235,.8); border-radius: var(--radius);
-    align-items: center; justify-content: center; flex-direction: column;
-    gap: 10px;
-  }
-  .scan-overlay.active { display: flex; }
-  .scan-line {
-    width: 80%; height: 2px; background: linear-gradient(90deg, transparent, var(--orange), transparent);
-    border-radius: 2px; animation: scanLine 1.2s ease-in-out infinite;
-  }
-  @keyframes scanLine { 0%,100%{transform:translateY(-60px);opacity:0} 20%,80%{opacity:1} 50%{transform:translateY(60px)} }
-  .scan-text { font-size: 12px; color: var(--orange); font-weight: 600; font-family:'Syne',sans-serif; }
-
-  /* ── PHOTO STRIP ── */
   .photo-strip { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
-  .photo-thumb {
-    flex-shrink: 0; width: 72px; height: 72px;
-    border-radius: 10px; overflow: hidden; position: relative;
-    border: 1.5px solid var(--border);
-  }
+  .photo-thumb { flex-shrink: 0; width: 72px; height: 72px; border-radius: 10px; overflow: hidden; position: relative; border: 1.5px solid var(--border); }
   .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
-  .photo-add {
-    flex-shrink: 0; width: 72px; height: 72px; border-radius: 10px;
-    border: 2px dashed var(--border); background: var(--card);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; color: var(--muted); cursor: pointer;
-  }
+  .photo-add { flex-shrink: 0; width: 72px; height: 72px; border-radius: 10px; border: 2px dashed var(--border); background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--muted); cursor: pointer; }
 
-  /* ── EMERGENCY BANNER ── */
   .emergency-banner {
     margin: 16px 20px 0;
     background: rgba(232,64,26,.07); border: 1px solid rgba(232,64,26,.2);
@@ -450,21 +374,30 @@
   .emergency-icon { font-size: 24px; }
   .emergency-text .e-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: #C03010; }
   .emergency-text .e-sub { font-size: 12px; color: var(--text-soft); margin-top: 2px; }
-  .emergency-call {
-    margin-left: auto; background: var(--red); color: #fff;
-    border: none; border-radius: 8px; padding: 8px 14px;
-    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px;
-    cursor: pointer; white-space: nowrap;
-  }
+  .emergency-call { margin-left: auto; background: var(--red); color: #fff; border: none; border-radius: 8px; padding: 8px 14px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; cursor: pointer; white-space: nowrap; }
 
-  /* RESPONSIVE CAP */
+  .spacer { height: 20px; }
+  .spacer-lg { height: 100px; }
+  .divider { height: 1px; background: var(--border); margin: 8px 0; }
+  .char-row { display: flex; justify-content: flex-end; margin-top: 4px; }
+  .char-count { font-size: 11px; color: var(--muted); }
+  .helper { font-size: 11px; color: var(--muted); margin-top: 5px; display: flex; align-items: center; gap: 5px; }
+
+  .scan-overlay {
+    display: none; position: absolute; inset: 0;
+    background: rgba(245,240,235,.8); border-radius: var(--radius);
+    align-items: center; justify-content: center; flex-direction: column; gap: 10px;
+  }
+  .scan-overlay.active { display: flex; }
+  .scan-line { width: 80%; height: 2px; background: linear-gradient(90deg, transparent, var(--orange), transparent); border-radius: 2px; animation: scanLine 1.2s ease-in-out infinite; }
+  @keyframes scanLine { 0%,100%{transform:translateY(-60px);opacity:0} 20%,80%{opacity:1} 50%{transform:translateY(60px)} }
+  .scan-text { font-size: 12px; color: var(--orange); font-weight: 600; font-family:'Syne',sans-serif; }
+
   .app-wrap { max-width: 430px; margin: 0 auto; min-height: 100vh; position: relative; }
 </style>
 </head>
 <body>
 <div class="app-wrap">
-
-
 
   <!-- NAV -->
   <nav class="nav">
@@ -483,7 +416,6 @@
     <div class="hero-bg"></div>
     <div class="hero-tag"><div class="dot"></div>AI-Powered Reporting</div>
     <h1>Protect Animals,<br><em>Report Now.</em></h1>
-
   </div>
 
   <!-- TABS -->
@@ -496,9 +428,7 @@
     </button>
   </div>
 
-  <!-- ═══════════════════════════════════════════ -->
-  <!--  PANEL 1 — CRUELTY REPORT                  -->
-  <!-- ═══════════════════════════════════════════ -->
+  <!-- PANEL 1 — CRUELTY REPORT -->
   <div class="panel active" id="panel-cruelty">
 
     <!-- Emergency banner -->
@@ -528,7 +458,6 @@
       <div class="media-preview" id="mediaPreview">
         <button class="media-remove" onclick="removeMedia()">✕</button>
       </div>
-
       <!-- AI CARD -->
       <div class="ai-card" id="aiCard">
         <div class="ai-card-header">
@@ -554,6 +483,54 @@
         </div>
       </div>
     </div>
+
+    <!-- ★ NEW: INCIDENT CLASSIFICATION ★ -->
+    <div class="section">
+      <div class="section-label">⚠️ Incident Classification</div>
+
+      <div class="field">
+        <div class="field-label">Severity Level <span class="req">*</span></div>
+        <div class="severity-toggle">
+          <div class="severity-opt">
+            <input type="radio" name="severity" id="sev-mild" value="mild">
+            <label for="sev-mild" class="mild">
+              <span class="sev-icon">🟢</span>
+              <span class="sev-label">Mild</span>
+              <span class="sev-sub">Concerning but not life-threatening</span>
+            </label>
+          </div>
+          <div class="severity-opt">
+            <input type="radio" name="severity" id="sev-moderate" value="moderate">
+            <label for="sev-moderate" class="moderate">
+              <span class="sev-icon">🟠</span>
+              <span class="sev-label">Moderate</span>
+              <span class="sev-sub">Animal is distressed or injured</span>
+            </label>
+          </div>
+          <div class="severity-opt">
+            <input type="radio" name="severity" id="sev-severe" value="severe">
+            <label for="sev-severe" class="severe">
+              <span class="sev-icon">🔴</span>
+              <span class="sev-label">Severe</span>
+              <span class="sev-sub">Life-threatening or deceased</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">Cruelty Type <span class="req">*</span></div>
+        <select id="crueltyType">
+          <option value="">Select type…</option>
+          <option value="neglect">🚫 Neglect — No food, water, or shelter</option>
+          <option value="abuse">👊 Physical abuse — Hitting, kicking, beating</option>
+          <option value="abandonment">🚪 Abandonment — Animal left alone</option>
+          <option value="hoarding">🏠 Hoarding — Too many animals, poor conditions</option>
+          <option value="other">❓ Other</option>
+        </select>
+      </div>
+    </div>
+    <!-- ★ END NEW SECTION ★ -->
 
     <!-- LOCATION -->
     <div class="section">
@@ -657,6 +634,9 @@
       </div>
     </div>
 
+    <!-- ★ HIDDEN CASE STATUS — defaults to open on submit ★ -->
+    <input type="hidden" id="caseStatus" value="open">
+
     <div class="spacer"></div>
     <div style="padding:0 20px 20px">
       <button class="btn-submit cruelty" onclick="submitReport('cruelty')">
@@ -667,13 +647,8 @@
   </div>
   <!-- END PANEL 1 -->
 
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!--  PANEL 2 — LOST & FOUND                    -->
-  <!-- ═══════════════════════════════════════════ -->
+  <!-- PANEL 2 — LOST & FOUND -->
   <div class="panel" id="panel-lost">
-
-    <!-- MODE SELECT -->
     <div class="section" style="padding-top:24px">
       <div class="lf-mode-row">
         <div class="lf-mode-btn active-lost" id="mode-lost" onclick="setLFMode('lost')">
@@ -689,7 +664,6 @@
       </div>
     </div>
 
-    <!-- PET PHOTOS -->
     <div class="section">
       <div class="section-label" id="lf-upload-label">📸 Photos of Your Pet</div>
       <div class="photo-strip" id="photoStrip">
@@ -699,7 +673,6 @@
       <div class="helper" style="margin-top:8px">📷 Add up to 6 clear photos – front, side, and any unique markings</div>
     </div>
 
-    <!-- PET DETAILS -->
     <div class="section">
       <div class="section-label">🐾 Pet Details</div>
       <div class="field">
@@ -751,7 +724,6 @@
       </div>
     </div>
 
-    <!-- LAST SEEN -->
     <div class="section">
       <div class="section-label" id="lf-location-label">📍 Last Seen Location</div>
       <div class="field">
@@ -761,9 +733,7 @@
           <input type="text" placeholder="E.g. Tanjong Pagar MRT area, near Block 5…" id="lfAddress" oninput="updateAlertPreview()">
         </div>
       </div>
-      <button class="btn-use-location" onclick="useGPS()">
-        📡 Use My Current Location
-      </button>
+      <button class="btn-use-location" onclick="useGPS()">📡 Use My Current Location</button>
       <div class="dt-row">
         <div class="field">
           <div class="field-label">Date <span class="req">*</span></div>
@@ -776,7 +746,6 @@
       </div>
     </div>
 
-    <!-- SMART RADIUS ALERT PREVIEW -->
     <div class="section">
       <div class="section-label">📡 Smart Radius Alert</div>
       <div class="field">
@@ -788,7 +757,6 @@
         </select>
         <div class="helper">🔔 Nearby app users and all SPCA staff will be instantly notified</div>
       </div>
-
       <div class="alert-preview show" id="alertPreview">
         <div class="alert-header">
           <div class="alert-icon-wrap">🔔</div>
@@ -813,7 +781,6 @@
       </div>
     </div>
 
-    <!-- CONTACT -->
     <div class="section">
       <div class="section-label">📞 Your Contact</div>
       <div class="field">
@@ -836,8 +803,6 @@
   </div>
   <!-- END PANEL 2 -->
 
-
-
   <!-- TOAST -->
   <div class="toast" id="toast">
     <div class="t-icon">✓</div>
@@ -846,13 +811,11 @@
 </div>
 
 <script>
-// ── TAB SWITCHING ────────────────────────────────
 function switchTab(tab) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => {
     b.classList.remove('active-cruelty','active-lost');
   });
-
   if (tab === 'cruelty') {
     document.getElementById('panel-cruelty').classList.add('active');
     document.getElementById('tab-cruelty').classList.add('active-cruelty');
@@ -863,14 +826,8 @@ function switchTab(tab) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ── FILE UPLOAD ──────────────────────────────────
-function handleDrag(e) {
-  e.preventDefault();
-  document.getElementById('uploadZone').classList.add('drag');
-}
-function handleDragLeave() {
-  document.getElementById('uploadZone').classList.remove('drag');
-}
+function handleDrag(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('drag'); }
+function handleDragLeave() { document.getElementById('uploadZone').classList.remove('drag'); }
 function handleDrop(e) {
   e.preventDefault();
   document.getElementById('uploadZone').classList.remove('drag');
@@ -885,7 +842,6 @@ function processMediaFile(file) {
   const zone = document.getElementById('uploadZone');
   const scanOverlay = document.getElementById('scanOverlay');
   scanOverlay.classList.add('active');
-
   setTimeout(() => {
     scanOverlay.classList.remove('active');
     zone.classList.add('has-file');
@@ -911,7 +867,6 @@ function removeMedia() {
   document.getElementById('uploadZone').classList.remove('has-file');
 }
 
-// ── AI ANALYSIS SIMULATION ───────────────────────
 const scenarios = [
   { urgency: 'high', badge: '🔴 High Priority', tags: ['⚠️ Possible injury detected','🔗 Animal restrained','🐕 Dog identified','😡 Aggressive behaviour'], confidence: '94%' },
   { urgency: 'medium', badge: '🟠 Medium Priority', tags: ['👀 Suspicious behaviour','🐱 Cat identified','🏠 Residential area'], confidence: '81%' },
@@ -928,7 +883,6 @@ function showAIAnalysis(file) {
   document.getElementById('aiCard').classList.add('show');
 }
 
-// ── GPS ──────────────────────────────────────────
 function useGPS() {
   if (!navigator.geolocation) { showToast('GPS not available','error'); return; }
   navigator.geolocation.getCurrentPosition(pos => {
@@ -941,7 +895,6 @@ function useGPS() {
   });
 }
 
-// ── PILL INPUT ───────────────────────────────────
 function addPill(e) {
   if (e.key === 'Enter') {
     e.preventDefault();
@@ -955,12 +908,10 @@ function addPill(e) {
   }
 }
 
-// ── CHAR COUNTER ─────────────────────────────────
 function countChars(el, counterId) {
   document.getElementById(counterId).textContent = el.value.length + ' / 500';
 }
 
-// ── LOST & FOUND MODE ────────────────────────────
 function setLFMode(mode) {
   document.getElementById('mode-lost').className = 'lf-mode-btn' + (mode==='lost'?' active-lost':'');
   document.getElementById('mode-found').className = 'lf-mode-btn' + (mode==='found'?' active-found':'');
@@ -972,7 +923,6 @@ function setLFMode(mode) {
   else document.getElementById('lf-submit-btn').style.background = '';
 }
 
-// ── PET PHOTOS ───────────────────────────────────
 function addPetPhotos(e) {
   const files = Array.from(e.target.files).slice(0, 6);
   const strip = document.getElementById('photoStrip');
@@ -990,7 +940,6 @@ function addPetPhotos(e) {
   });
 }
 
-// ── BREED SUGGESTIONS ────────────────────────────
 const breeds = {
   dog: ['Shiba Inu','Golden Retriever','Poodle','Chihuahua','Mixed Breed','Labrador'],
   cat: ['Persian','Tabby','Siamese','Bengal','Maine Coon','Mixed'],
@@ -1016,7 +965,6 @@ function updateBreeds() {
   });
 }
 
-// ── ALERT PREVIEW ────────────────────────────────
 function updateAlertPreview() {
   const area = document.getElementById('lfAddress')?.value || 'your area';
   const radius = document.getElementById('alertRadius')?.value || '2';
@@ -1033,13 +981,30 @@ document.getElementById('petName')?.addEventListener('input', updateAlertPreview
 document.getElementById('petSpecies')?.addEventListener('change', updateAlertPreview);
 document.getElementById('petBreed')?.addEventListener('input', updateAlertPreview);
 
-// ── SUBMIT ───────────────────────────────────────
 function submitReport(type) {
   if (type === 'cruelty') {
     const addr = document.getElementById('address').value;
     const desc = document.getElementById('incidentDesc').value;
+    const severity = document.querySelector('input[name="severity"]:checked')?.value;
+    const crueltyType = document.getElementById('crueltyType').value;
+
     if (!addr || !desc) { showToast('⚠️ Please fill required fields','error'); return; }
+    if (!severity) { showToast('⚠️ Please select a severity level','error'); return; }
+    if (!crueltyType) { showToast('⚠️ Please select a cruelty type','error'); return; }
+
+    // Data ready to send to your database
+    const reportData = {
+      address: addr,
+      description: desc,
+      severity: severity,
+      cruelty_type: crueltyType,
+      case_status: 'open',
+      timestamp: new Date().toISOString()
+    };
+
+    console.log('Report data:', reportData); // Remove this once Supabase is connected
     showToast('🚨 Report submitted to SPCA! Officers alerted.','success');
+
   } else {
     const name = document.getElementById('petName').value;
     const addr = document.getElementById('lfAddress').value;
@@ -1048,7 +1013,6 @@ function submitReport(type) {
   }
 }
 
-// ── TOAST ────────────────────────────────────────
 function showToast(msg, type='success') {
   const toast = document.getElementById('toast');
   const icon = toast.querySelector('.t-icon');
@@ -1059,7 +1023,6 @@ function showToast(msg, type='success') {
   setTimeout(() => toast.classList.remove('show'), 3500);
 }
 
-// ── INIT ─────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {});
 </script>
 </body>
