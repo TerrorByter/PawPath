@@ -4,6 +4,7 @@
   "description": "PawPath SPCA Digital Adoption App with AI pet matching",
   "main": "index.js",
   "dependencies": {
+    "@supabase/supabase-js": "^2.99.3",
     "openai": "^4.28.0"
   },
   "engines": {
