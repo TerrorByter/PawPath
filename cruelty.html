@@ -6,8 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SPCA Singapore – Animal Welfare App</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-client.js"></script>
 <style>
   :root {
     --red: #E8401A;
@@ -983,37 +981,60 @@ document.getElementById('petName')?.addEventListener('input', updateAlertPreview
 document.getElementById('petSpecies')?.addEventListener('change', updateAlertPreview);
 document.getElementById('petBreed')?.addEventListener('input', updateAlertPreview);
 
-function submitReport(type) {
+const SUPABASE_URL = 'https://xdgwcxbzvexswcrovjxw.supabase.co'
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkZ3djeGJ6dmV4c3djcm92anh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDQzNDMsImV4cCI6MjA4OTcyMDM0M30.dLMAvORcsCujcDnEq2qek4ZwaHvcENCC-5A1aliUp0k'
+
+async function submitReport(type) {
   if (type === 'cruelty') {
-    const addr = document.getElementById('address').value;
-    const desc = document.getElementById('incidentDesc').value;
-    const severity = document.querySelector('input[name="severity"]:checked')?.value;
-    const crueltyType = document.getElementById('crueltyType').value;
+    const addr = document.getElementById('address').value
+    const desc = document.getElementById('incidentDesc').value
+    const severity = document.querySelector('input[name="severity"]:checked')?.value
+    const crueltyType = document.getElementById('crueltyType').value
+    const animalCondition = document.querySelector('input[name="animalStatus"]:checked')?.value
 
-    if (!addr || !desc) { showToast('⚠️ Please fill required fields','error'); return; }
-    if (!severity) { showToast('⚠️ Please select a severity level','error'); return; }
-    if (!crueltyType) { showToast('⚠️ Please select a cruelty type','error'); return; }
+    if (!addr || !desc) { showToast('⚠️ Please fill required fields', 'error'); return }
+    if (!severity) { showToast('⚠️ Please select a severity level', 'error'); return }
+    if (!crueltyType) { showToast('⚠️ Please select a cruelty type', 'error'); return }
 
-    // Data ready to send to your database
-    const reportData = {
-      address: addr,
-      description: desc,
-      severity: severity,
-      cruelty_type: crueltyType,
-      case_status: 'open',
-      timestamp: new Date().toISOString()
-    };
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/reports`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          severity,
+          cruelty_type: crueltyType,
+          address: addr,
+          description: desc,
+          animal_condition: animalCondition || 'unknown',
+          case_status: 'open',
+          timestamp: new Date().toISOString()
+        })
+      })
 
-    console.log('Report data:', reportData); // Remove this once Supabase is connected
-    showToast('🚨 Report submitted to SPCA! Officers alerted.','success');
+      if (res.ok) {
+        showToast('🚨 Report submitted to SPCA! Officers alerted.', 'success')
+      } else {
+        const err = await res.text()
+        console.error('Supabase error:', err)
+        showToast('⚠️ Submission failed. Try again.', 'error')
+      }
+    } catch (err) {
+      console.error('Network error:', err)
+      showToast('⚠️ Network error. Try again.', 'error')
+    }
 
   } else {
-    const name = document.getElementById('petName').value;
-    const addr = document.getElementById('lfAddress').value;
-    if (!name || !addr) { showToast('⚠️ Please fill required fields','error'); return; }
-    showToast('🐾 Report submitted! Nearby users notified.','success');
-    }
+    const name = document.getElementById('petName').value
+    const addr = document.getElementById('lfAddress').value
+    if (!name || !addr) { showToast('⚠️ Please fill required fields', 'error'); return }
+    showToast('🐾 Report submitted! Nearby users notified.', 'success')
   }
+}
 
 function showToast(msg, type='success') {
   const toast = document.getElementById('toast');
