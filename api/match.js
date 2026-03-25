@@ -16,26 +16,31 @@ module.exports = async function handler(req, res) {
     
     try {
         const { prompt } = req.body || {};
+        const SUPABASE_URL = (process.env.SUPABASE_URL || '').trim().replace(/^["']|["']$/g, '');
+        const SUPABASE_KEY = (process.env.SUPABASE_ANON_KEY || '').trim().replace(/^["']|["']$/g, '');
+        const OPENAI_KEY = (process.env.OPENAI_API_KEY || '').trim().replace(/^["']|["']$/g, '');
+        
         console.log('Prompt received:', prompt ? prompt.substring(0, 50) + '...' : 'NONE');
 
         // 2. Check Environment
         const envStatus = {
-            has_openai_key: !!process.env.OPENAI_API_KEY,
-            openai_key_prefix: process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.substring(0, 7) : 'N/A',
-            has_supabase_url: !!process.env.SUPABASE_URL,
-            has_supabase_key: !!process.env.SUPABASE_ANON_KEY,
+            has_openai_key: !!OPENAI_KEY,
+            openai_key_prefix: OPENAI_KEY ? OPENAI_KEY.substring(0, 7) : 'N/A',
+            has_supabase_url: !!SUPABASE_URL,
+            has_supabase_key: !!SUPABASE_KEY,
+            supabase_url_preview: SUPABASE_URL ? SUPABASE_URL.substring(0, 15) + '...' : 'N/A',
             base_url: process.env.OPENAI_BASE_URL || 'DEFAULT'
         };
         console.log('Environment Status:', JSON.stringify(envStatus));
 
-        if (!process.env.OPENAI_API_KEY) throw new Error('MISSING_OPENAI_KEY');
-        if (!process.env.SUPABASE_URL) throw new Error('MISSING_SUPABASE_URL');
+        if (!OPENAI_KEY) throw new Error('MISSING_OPENAI_KEY');
+        if (!SUPABASE_URL) throw new Error('MISSING_SUPABASE_URL');
 
         // 3. Initialize Clients
-        console.log('Initializing clients...');
-        const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+        console.log('Initializing clients with cleaned variables...');
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
         const openai = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY,
+            apiKey: OPENAI_KEY,
             baseURL: process.env.OPENAI_BASE_URL || 'https://api.apiyi.com/v1'
         });
 
