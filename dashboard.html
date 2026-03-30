@@ -403,220 +403,140 @@ body::before {
 </div>
 
 <script>
-// ── SUPABASE CONFIG ───────────────────────────────
-// Replace YOUR_ANON_KEY_HERE with your actual anon key from Supabase → Settings → API
-const SUPABASE_URL = 'https://xdgwcxbzvexswcrovjxw.supabase.co'
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkZ3djeGJ6dmV4c3djcm92anh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDQzNDMsImV4cCI6MjA4OTcyMDM0M30.dLMAvORcsCujcDnEq2qek4ZwaHvcENCC-5A1aliUp0k'
+// ── CONFIG ────────────────────────────────────────
+const SUPABASE_URL = 'https://xdgwcxbzvexswcrovjxw.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkZ3djeGJ6dmV4c3djcm92anh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDQzNDMsImV4cCI6MjA4OTcyMDM0M30.dLMAvORcsCujcDnEq2qek4ZwaHvcENCC-5A1aliUp0k';
+
+let sbClient = null;
+let allReports = [];
 
 // ── LOGIN ─────────────────────────────────────────
 function doLogin() {
-  const u = document.getElementById('loginUser').value.trim()
-  const p = document.getElementById('loginPass').value.trim()
+  console.log('doLogin() called');
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value.trim();
+  
   if (u === 'spca' && p === 'spca123') {
-    document.getElementById('loginOverlay').style.display = 'none'
-    document.getElementById('appContent').style.display = 'block'
-    init()
+    document.getElementById('loginOverlay').style.display = 'none';
+    document.getElementById('appContent').style.display = 'block';
+    init();
   } else {
-    document.getElementById('loginError').style.display = 'block'
+    document.getElementById('loginError').style.display = 'block';
   }
 }
 
-// ── SUPABASE CLIENT ─────────────────────────────
-let supabase = null;
+// ── INIT ──────────────────────────────────────────
+function init() {
+  console.log('init() called');
+  initSupabase();
+  const now = new Date();
+  const dateEl = document.getElementById('heroDate');
+  if (dateEl) {
+    dateEl.textContent = now.toLocaleDateString('en-SG', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  }
+  loadRealData();
+}
+
 function initSupabase() {
-  if (typeof supabase === 'undefined' || !supabase) {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    
-    // Subscribe to Realtime changes
-    supabase
+  if (!window.supabase) {
+    console.error('Supabase library not found');
+    return;
+  }
+  if (!sbClient) {
+    sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    sbClient
       .channel('public:reports')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'reports' }, payload => {
-        console.log('Realtime change received:', payload);
+        console.log('Realtime change:', payload);
         loadRealData();
       })
       .subscribe();
   }
 }
 
-// ── INIT ──────────────────────────────────────────
-function init() {
-  initSupabase()
-  const now = new Date()
-  document.getElementById('heroDate').textContent =
-    now.toLocaleDateString('en-SG', { weekday:'long', day:'numeric', month:'long', year:'numeric' })
-  loadRealData()
-}
-
-// ── GLOBAL STATE ───────────────────────────────────
-let allReports = []
-
-// ── LOAD REAL DATA FROM SUPABASE ──────────────────
 async function loadRealData() {
+  console.log('loadRealData()');
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/reports?order=created_at.desc`, {
       headers: {
         'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`
       }
-    })
-    const raw = await res.json()
-    allReports = Array.isArray(raw) ? raw : []
+    });
+    const raw = await res.json();
+    allReports = Array.isArray(raw) ? raw : [];
 
     if (!Array.isArray(allReports)) {
-      console.error('Supabase error:', allReports)
-      document.getElementById('caseListOpen').innerHTML = '<div class="empty-state">⚠️ Could not connect to database. Check API key.</div>'
-      return
+      console.error('Data error:', raw);
+      return;
     }
 
-    const reports = allReports
+    const reports = allReports;
+    document.getElementById('statTotal').textContent = reports.length;
+    document.getElementById('statTotalSub').textContent = reports.length + ' reports';
+    
+    const severeCount = reports.filter(r => r.severity === 'severe' || r.type === 'severe').length;
+    document.getElementById('statSevere').textContent = severeCount;
+    document.getElementById('statSevereSub').textContent = reports.length > 0 ? Math.round(severeCount/reports.length*100)+'%' : '0%';
+    
+    const openCount = reports.filter(r => r.case_status === 'open' || !r.case_status).length;
+    document.getElementById('statOpen').textContent = openCount;
+    
+    const resolvedCount = reports.filter(r => r.case_status === 'resolved').length;
+    document.getElementById('statResolved').textContent = resolvedCount;
 
-    // stat counts
-    const total = reports.length
-    const severe = reports.filter(r => r.severity === 'severe').length
-    const open = reports.filter(r => r.case_status === 'open').length
-    const resolved = reports.filter(r => r.case_status === 'resolved').length
-
-    // update stat cards
-    document.getElementById('statTotal').textContent = total
-    document.getElementById('statTotalSub').textContent = total + ' reports submitted'
-    document.getElementById('statSevere').textContent = severe
-    document.getElementById('statSevereSub').textContent = total > 0 ? Math.round(severe / total * 100) + '% of total' : '0% of total'
-    document.getElementById('statOpen').textContent = open
-    document.getElementById('statOpenSub').textContent = 'needs follow-up'
-    document.getElementById('statResolved').textContent = resolved
-    document.getElementById('statResSub').textContent = resolved + ' cases closed'
-
-    // cruelty type breakdown
-    renderBreakdown(reports)
-
-    // hotspot detection — flag any address with 2+ reports
-    const addressCount = {}
-    reports.forEach(r => {
-      if (r.address) addressCount[r.address] = (addressCount[r.address] || 0) + 1
-    })
-    const hotspot = Object.entries(addressCount).sort((a, b) => b[1] - a[1])[0]
-    if (hotspot && hotspot[1] >= 2) {
-      document.getElementById('hotspotTitle').textContent = `Hotspot detected — ${hotspot[0]}`
-      document.getElementById('hotspotSub').textContent = `${hotspot[1]} reports from this location`
-      document.getElementById('hotspotBanner').classList.add('show')
-    } else {
-      document.getElementById('hotspotBanner').classList.remove('show')
-    }
-
-    // render cases by status
-    renderRealCases(reports.filter(r => r.case_status === 'open' || !r.case_status), 'caseListOpen')
-    renderRealCases(reports.filter(r => r.case_status === 'investigating'), 'caseListInvestigating')
-    renderRealCases(reports.filter(r => r.case_status === 'resolved'), 'caseListResolved')
+    renderBreakdown(reports);
+    renderRealCases(reports.filter(r => r.case_status === 'open' || !r.case_status), 'caseListOpen');
+    renderRealCases(reports.filter(r => r.case_status === 'investigating'), 'caseListInvestigating');
+    renderRealCases(reports.filter(r => r.case_status === 'resolved'), 'caseListResolved');
 
   } catch (err) {
-    console.error('Failed to load data:', err)
-    document.getElementById('caseList').innerHTML = '<div class="empty-state">⚠️ Failed to load. Check your internet connection.</div>'
+    console.error('Fetch error:', err);
   }
 }
 
-// ── BREAKDOWN BARS ────────────────────────────────
 function renderBreakdown(reports) {
-  const types = ['neglect', 'abuse', 'abandonment', 'hoarding', 'other']
-  const labels = { neglect: 'Neglect', abuse: 'Physical abuse', abandonment: 'Abandonment', hoarding: 'Hoarding', other: 'Other' }
-  const counts = {}
-  types.forEach(t => counts[t] = reports.filter(r => r.cruelty_type === t).length)
-  const max = Math.max(...Object.values(counts), 1)
-
-  const html = types
-    .filter(t => counts[t] > 0)
-    .map(t => `
-      <div class="breakdown-row">
-        <div class="breakdown-label">${labels[t]}</div>
-        <div class="breakdown-bar-wrap"><div class="breakdown-bar" style="width:${Math.round(counts[t] / max * 100)}%"></div></div>
-        <div class="breakdown-count">${counts[t]}</div>
-      </div>
-    `).join('')
-
-  document.getElementById('breakdownList').innerHTML = html || '<div class="empty-state">No reports yet</div>'
+  const types = ['neglect', 'abuse', 'abandonment', 'hoarding', 'other'];
+  const labels = { neglect: 'Neglect', abuse: 'Physical abuse', abandonment: 'Abandonment', hoarding: 'Hoarding', other: 'Other' };
+  const counts = {};
+  types.forEach(t => counts[t] = reports.filter(r => r.type === t || r.cruelty_type === t).length);
+  const max = Math.max(...Object.values(counts), 1);
+  const html = types.filter(t => counts[t] > 0).map(t => `
+    <div class="breakdown-row">
+      <div class="breakdown-label">${labels[t]}</div>
+      <div class="breakdown-bar-wrap"><div class="breakdown-bar" style="width:${Math.round(counts[t]/max*100)}%"></div></div>
+      <div class="breakdown-count">${counts[t]}</div>
+    </div>`).join('');
+  document.getElementById('breakdownList').innerHTML = html || 'No reports';
 }
 
-// ── RENDER CASES ──────────────────────────────────
 function renderRealCases(reports, containerId) {
-  const list = document.getElementById(containerId)
-  if (!list) return
-
-  if (reports.length === 0) {
-    const emptyMsg = containerId === 'caseListOpen' ? 'No open cases 🎉' : 
-                     containerId === 'caseListInvestigating' ? 'No investigations in progress' : 
-                     'No resolved cases yet'
-    list.innerHTML = `<div class="empty-state">${emptyMsg}</div>`
-    return
-  }
+  const list = document.getElementById(containerId);
+  if (!list) return;
+  if (reports.length === 0) { list.innerHTML = 'No cases here.'; return; }
   list.innerHTML = reports.map(r => `
-    <div class="case-item" id="case-${r.id}" onclick="showCaseDetails('${r.id}')">
+    <div class="case-item" onclick="showCaseDetails('${r.id}')">
       <span class="severity-badge ${r.severity || 'mild'}">${r.severity || 'mild'}</span>
       <div class="case-info">
-        <div class="case-title">${r.cruelty_type || 'Unknown'} · ${r.address || 'No address'}</div>
-        <div class="case-meta">${new Date(r.created_at).toLocaleDateString('en-SG')} · #SPC-${r.id}</div>
+        <div class="case-title">${r.type || r.cruelty_type || 'Unknown'} · ${r.address || 'No address'}</div>
       </div>
-      <select class="status-select" onclick="event.stopPropagation()" onchange="event.stopPropagation(); updateCaseStatus('${r.id}', this.value)">
-        <option value="open"          ${r.case_status === 'open'          ? 'selected' : ''}>Open</option>
-        <option value="investigating" ${r.case_status === 'investigating' ? 'selected' : ''}>Investigating</option>
-        <option value="resolved"      ${r.case_status === 'resolved'      ? 'selected' : ''}>Resolved</option>
-      </select>
-    </div>
-  `).join('')
+    </div>`).join('');
 }
 
-// ── MODAL LOGIC ───────────────────────────────────
 function showCaseDetails(id) {
-  const r = allReports.find(x => x.id === id)
-  if (!r) return
-
-  document.getElementById('modalId').textContent = `#SPC-${r.id}`
-  document.getElementById('modalTitle').textContent = (r.cruelty_type || 'Unknown Incident').toUpperCase()
-  document.getElementById('modalSeverity').innerHTML = `<span class="severity-badge ${r.severity || 'mild'}">${r.severity || 'mild'}</span>`
-  document.getElementById('modalStatus').textContent = (r.case_status || 'open').toUpperCase()
-  document.getElementById('modalAddress').textContent = r.address || 'No address specified'
-  document.getElementById('modalDate').textContent = r.incident_date || 'Unknown'
-  document.getElementById('modalTime').textContent = r.incident_time || 'Unknown'
-  document.getElementById('modalDesc').textContent = r.incident_desc || 'No description provided.'
-  
-  // condition
-  const cond = r.animal_condition_details || ''
-  const status = r.animal_status ? `Status: ${r.animal_status}` : ''
-  document.getElementById('modalCondition').textContent = `${status}${status && cond ? ' — ' : ''}${cond}` || 'No condition details.'
-
-  // suspect
-  const suspect = r.suspect_desc || ''
-  const tags = r.tags ? `Tags: ${r.tags}` : ''
-  document.getElementById('modalSuspect').textContent = `${suspect}${suspect && tags ? '\n' : ''}${tags}` || 'No suspect information.'
-
-  document.getElementById('modalContact').textContent = r.reporter_contact || 'Anonymous/Not provided'
-
-  document.getElementById('caseModal').classList.add('show')
+  const r = allReports.find(x => x.id === id);
+  if (!r) return;
+  document.getElementById('modalId').textContent = `#SPC-${r.id}`;
+  document.getElementById('modalTitle').textContent = (r.type || r.cruelty_type || 'Unknown').toUpperCase();
+  document.getElementById('modalAddress').textContent = r.address || 'No address';
+  document.getElementById('modalDesc').textContent = r.description || r.incident_desc || 'No description.';
+  document.getElementById('modalContact').textContent = r.contact_number || r.reporter_contact || 'Anonymous';
+  document.getElementById('caseModal').classList.add('show');
 }
 
 function closeModal() {
-  document.getElementById('caseModal').classList.remove('show')
+  document.getElementById('caseModal').classList.remove('show');
 }
-
-// ── UPDATE CASE STATUS ────────────────────────────
-async function updateCaseStatus(id, status) {
-  try {
-    await fetch(`${SUPABASE_URL}/rest/v1/reports?id=eq.${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
-      },
-      body: JSON.stringify({ case_status: status })
-    })
-    if (status === 'resolved') {
-      document.getElementById(`case-${id}`).style.opacity = '.45'
-    }
-    loadRealData()
-  } catch (err) {
-    console.error('Failed to update status:', err)
-  }
-}
-
 </script>
 </body>
 </html>
