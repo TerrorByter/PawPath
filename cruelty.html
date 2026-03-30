@@ -924,16 +924,56 @@ function showAIAnalysis(file) {
 // ── GPS ───────────────────────────────────────────
 function useGPS() {
   if (!navigator.geolocation) { showToast('GPS not available','error'); return }
-  navigator.geolocation.getCurrentPosition(pos => {
-    const addrEl = document.getElementById('address')
-    const lfAddrEl = document.getElementById('lfAddress')
-    const coords = `Singapore (${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)})`
-    if (addrEl && document.getElementById('panel-cruelty').classList.contains('active')) addrEl.value = coords
-    if (lfAddrEl && document.getElementById('panel-lost').classList.contains('active')) { lfAddrEl.value = coords; updateAlertPreview() }
-    showToast('📡 Location detected!','success')
+  
+  showToast('📡 Detecting location...', 'success');
+  
+  navigator.geolocation.getCurrentPosition(async pos => {
+    const lat = pos.coords.latitude;
+    const lon = pos.coords.longitude;
+    const addrEl = document.getElementById('address');
+    const lfAddrEl = document.getElementById('lfAddress');
+    const postalEl = document.getElementById('postalCode');
+
+    try {
+      // Use OneMap Reverse Geocode API
+      const response = await fetch(`https://www.onemap.gov.sg/api/common/reverseGeocode?location=${lat},${lon}&buffer=40&addressType=All&otherFeatures=N`);
+      const data = await response.json();
+
+      if (data.GeocodeInfo && data.GeocodeInfo.length > 0) {
+        const info = data.GeocodeInfo[0];
+        // Format address: BUILDING (if exists) + ROAD
+        let addressStr = info.ROAD || '';
+        if (info.BUILDING && info.BUILDING !== 'NIL') {
+          addressStr = `${info.BUILDING}, ${addressStr}`;
+        }
+        
+        if (addrEl && document.getElementById('panel-cruelty').classList.contains('active')) {
+          addrEl.value = addressStr;
+          if (postalEl) postalEl.value = info.POSTAL || '';
+        }
+        if (lfAddrEl && document.getElementById('panel-lost').classList.contains('active')) {
+          lfAddrEl.value = addressStr;
+          updateAlertPreview();
+        }
+        showToast('📍 Address resolved!', 'success');
+      } else {
+        // Fallback to coordinates if no address found
+        const coords = `Singapore (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+        if (addrEl && document.getElementById('panel-cruelty').classList.contains('active')) addrEl.value = coords;
+        if (lfAddrEl && document.getElementById('panel-lost').classList.contains('active')) { lfAddrEl.value = coords; updateAlertPreview(); }
+        showToast('📡 Coordinates captured', 'success');
+      }
+    } catch (err) {
+      console.error('Geocoding error:', err);
+      // Fallback to coordinates on error
+      const coords = `Singapore (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+      if (addrEl && document.getElementById('panel-cruelty').classList.contains('active')) addrEl.value = coords;
+      if (lfAddrEl && document.getElementById('panel-lost').classList.contains('active')) { lfAddrEl.value = coords; updateAlertPreview(); }
+      showToast('📡 Coordinates captured', 'success');
+    }
   }, () => {
-    showToast('⚠️ Enable location permission','error')
-  })
+    showToast('⚠️ Enable location permission','error');
+  });
 }
 
 // ── PILL INPUT ────────────────────────────────────
