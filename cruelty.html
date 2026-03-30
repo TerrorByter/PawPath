@@ -935,21 +935,24 @@ function useGPS() {
     const postalEl = document.getElementById('postalCode');
 
     try {
-      // Use OneMap Reverse Geocode API
-      const response = await fetch(`https://www.onemap.gov.sg/api/common/reverseGeocode?location=${lat},${lon}&buffer=40&addressType=All&otherFeatures=N`);
+      // Use Nominatim (OpenStreetMap) Reverse Geocode API
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
       const data = await response.json();
 
-      if (data.GeocodeInfo && data.GeocodeInfo.length > 0) {
-        const info = data.GeocodeInfo[0];
-        // Format address: BUILDING (if exists) + ROAD
-        let addressStr = info.ROAD || '';
-        if (info.BUILDING && info.BUILDING !== 'NIL') {
-          addressStr = `${info.BUILDING}, ${addressStr}`;
-        }
+      if (data.address) {
+        const addr = data.address;
+        // Construct a clean address: [House Number] [Road] or [Building]
+        let addressParts = [];
+        if (addr.building) addressParts.push(addr.building);
+        if (addr.house_number) addressParts.push(addr.house_number);
+        if (addr.road) addressParts.push(addr.road);
+        
+        // Fallback to display_name if no specific parts found
+        const addressStr = addressParts.length > 0 ? addressParts.join(', ') : data.display_name.split(',').slice(0, 2).join(',').trim();
         
         if (addrEl && document.getElementById('panel-cruelty').classList.contains('active')) {
           addrEl.value = addressStr;
-          if (postalEl) postalEl.value = info.POSTAL || '';
+          if (postalEl) postalEl.value = addr.postcode || '';
         }
         if (lfAddrEl && document.getElementById('panel-lost').classList.contains('active')) {
           lfAddrEl.value = addressStr;
