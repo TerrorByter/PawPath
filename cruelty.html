@@ -151,49 +151,7 @@
     font-size: 14px; display: flex; align-items: center; justify-content: center;
   }
 
-  .ai-card {
-    border-radius: var(--radius); background: var(--card);
-    border: 1px solid var(--border); overflow: hidden; margin-top: 12px;
-    display: none;
-  }
-  .ai-card.show { display: block; animation: fadeUp .4s ease; }
-  .ai-card-header {
-    padding: 12px 16px; background: rgba(242,106,27,.07);
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 8px;
-  }
-  .ai-card-header .ai-icon {
-    width: 28px; height: 28px; background: var(--orange);
-    border-radius: 8px; display: flex; align-items: center;
-    justify-content: center; font-size: 14px;
-  }
-  .ai-card-header .ai-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; }
-  .ai-card-header .ai-sub { font-size: 11px; color: var(--text-soft); }
-  .ai-body { padding: 14px 16px; }
-  .urgency-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .urgency-label { font-size: 13px; color: var(--text-soft); }
-  .urgency-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 6px 14px; border-radius: 20px;
-    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px;
-  }
-  .urgency-badge.high { background: rgba(232,64,26,.12); color: #C03010; border: 1px solid rgba(232,64,26,.3); }
-  .urgency-badge.medium { background: rgba(245,124,31,.12); color: #C06010; border: 1px solid rgba(245,124,31,.3); }
-  .urgency-badge.low { background: rgba(46,168,85,.12); color: #1A7A3A; border: 1px solid rgba(46,168,85,.3); }
-  .ai-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-  .ai-tag {
-    padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 500;
-    background: var(--card2); border: 1px solid var(--border); color: var(--text-soft);
-  }
-  .ai-tag.flagged { background: rgba(232,64,26,.08); border-color: rgba(232,64,26,.2); color: #C03010; }
-  .ai-progress { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin: 14px 0 4px; }
-  .ai-progress-bar {
-    height: 100%; border-radius: 2px;
-    background: linear-gradient(90deg, var(--orange), #E84010);
-    animation: scanAI 1.4s ease-in-out;
-  }
-  @keyframes scanAI { from{width:0} to{width:100%} }
-  .ai-confidence { font-size: 11px; color: var(--text-soft); text-align: right; }
+
 
   .field { margin-bottom: 14px; }
   .field-label {
@@ -384,15 +342,7 @@
   .char-count { font-size: 11px; color: var(--muted); }
   .helper { font-size: 11px; color: var(--muted); margin-top: 5px; display: flex; align-items: center; gap: 5px; }
 
-  .scan-overlay {
-    display: none; position: absolute; inset: 0;
-    background: rgba(245,240,235,.8); border-radius: var(--radius);
-    align-items: center; justify-content: center; flex-direction: column; gap: 10px;
-  }
-  .scan-overlay.active { display: flex; }
-  .scan-line { width: 80%; height: 2px; background: linear-gradient(90deg, transparent, var(--orange), transparent); border-radius: 2px; animation: scanLine 1.2s ease-in-out infinite; }
-  @keyframes scanLine { 0%,100%{transform:translateY(-60px);opacity:0} 20%,80%{opacity:1} 50%{transform:translateY(60px)} }
-  .scan-text { font-size: 12px; color: var(--orange); font-weight: 600; font-family:'Syne',sans-serif; }
+
 
   .app-wrap { max-width: 430px; margin: 0 auto; min-height: 100vh; position: relative; }
 
@@ -487,37 +437,9 @@
         <div class="upload-sub">Drag & drop or tap to choose</div>
         <div class="upload-badge">📱 Supports JPG, PNG, MP4, MOV · Max 100MB</div>
         <input type="file" id="mediaInput" accept="image/*,video/*" onchange="handleFileSelect(event)">
-        <div class="scan-overlay" id="scanOverlay">
-          <div class="scan-line"></div>
-          <div class="scan-text">🤖 AI Analysing…</div>
-        </div>
       </div>
       <div class="media-preview" id="mediaPreview">
         <button class="media-remove" onclick="removeMedia()">✕</button>
-      </div>
-      <!-- AI CARD -->
-      <div class="ai-card" id="aiCard">
-        <div class="ai-card-header">
-          <div class="ai-icon">🤖</div>
-          <div>
-            <div class="ai-title">AI Incident Analysis</div>
-            <div class="ai-sub">Real-time computer vision detection</div>
-          </div>
-        </div>
-        <div class="ai-body">
-          <div class="urgency-row">
-            <span class="urgency-label">Urgency Level</span>
-            <span class="urgency-badge high" id="urgencyBadge">🔴 High Priority</span>
-          </div>
-          <div class="ai-progress"><div class="ai-progress-bar"></div></div>
-          <div class="ai-confidence" id="aiConfidence">Confidence: 94%</div>
-          <div class="ai-tags" id="aiTags">
-            <span class="ai-tag flagged">⚠️ Possible injury detected</span>
-            <span class="ai-tag flagged">🔗 Animal restrained</span>
-            <span class="ai-tag">🐕 Dog identified</span>
-            <span class="ai-tag">📍 Outdoor location</span>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -877,49 +799,27 @@ function handleFileSelect(e) {
 }
 function processMediaFile(file) {
   const zone = document.getElementById('uploadZone')
-  const scanOverlay = document.getElementById('scanOverlay')
-  scanOverlay.classList.add('active')
-  setTimeout(() => {
-    scanOverlay.classList.remove('active')
-    zone.classList.add('has-file')
-    const reader = new FileReader()
-    reader.onload = (ev) => {
-      const preview = document.getElementById('mediaPreview')
-      preview.innerHTML = `<button class="media-remove" onclick="removeMedia()">✕</button>`
-      if (file.type.startsWith('image/')) {
-        preview.innerHTML += `<img src="${ev.target.result}" alt="Preview">`
-      } else {
-        preview.innerHTML += `<video src="${ev.target.result}" controls></video>`
-      }
-      preview.style.display = 'block'
+  zone.classList.add('has-file')
+  const reader = new FileReader()
+  reader.onload = (ev) => {
+    const preview = document.getElementById('mediaPreview')
+    preview.innerHTML = `<button class="media-remove" onclick="removeMedia()">✕</button>`
+    if (file.type.startsWith('image/')) {
+      preview.innerHTML += `<img src="${ev.target.result}" alt="Preview">`
+    } else {
+      preview.innerHTML += `<video src="${ev.target.result}" controls></video>`
     }
-    reader.readAsDataURL(file)
-    showAIAnalysis(file)
-  }, 1800)
+    preview.style.display = 'block'
+  }
+  reader.readAsDataURL(file)
 }
 function removeMedia() {
   document.getElementById('mediaPreview').style.display = 'none'
   document.getElementById('mediaInput').value = ''
-  document.getElementById('aiCard').classList.remove('show')
   document.getElementById('uploadZone').classList.remove('has-file')
 }
 
-// ── AI ANALYSIS SIMULATION ────────────────────────
-const scenarios = [
-  { urgency: 'high', badge: '🔴 High Priority', tags: ['⚠️ Possible injury detected','🔗 Animal restrained','🐕 Dog identified','😡 Aggressive behaviour'], confidence: '94%' },
-  { urgency: 'medium', badge: '🟠 Medium Priority', tags: ['👀 Suspicious behaviour','🐱 Cat identified','🏠 Residential area'], confidence: '81%' },
-  { urgency: 'low', badge: '🟢 Low Priority', tags: ['🐕 Possible stray','🌳 Outdoor location','No immediate threat'], confidence: '73%' },
-]
-function showAIAnalysis(file) {
-  const s = scenarios[Math.floor(Math.random() * scenarios.length)]
-  const badge = document.getElementById('urgencyBadge')
-  badge.className = 'urgency-badge ' + s.urgency
-  badge.textContent = s.badge
-  document.getElementById('aiConfidence').textContent = 'Confidence: ' + s.confidence
-  const tagsEl = document.getElementById('aiTags')
-  tagsEl.innerHTML = s.tags.map((t,i) => `<span class="ai-tag${i<2?' flagged':''}">${t}</span>`).join('')
-  document.getElementById('aiCard').classList.add('show')
-}
+
 
 // ── GPS ───────────────────────────────────────────
 function useGPS() {
