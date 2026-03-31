@@ -395,7 +395,7 @@ body::before {
         <div id="modalContact" class="detail-value">—</div>
       </div>
 
-      <button class="btn-generate" onclick="closeModal()" style="margin-top:10px; background:var(--card2); color:var(--text); box-shadow:none">Close Details</button>
+      <button id="btnDelete" onclick="deleteCase(currentCaseId)" style="width:100%; margin-top:20px; padding:12px; border:none; border-radius:4px; background:rgba(232,64,26,0.1); color:#E8401A; font-family:'DM Sans',sans-serif; font-weight:700; cursor:pointer;">Delete Case Report</button>
     </div>
   </div>
 
@@ -409,6 +409,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 let sbClient = null;
 let allReports = [];
+let currentCaseId = null;
 
 // ── LOGIN ─────────────────────────────────────────
 function doLogin() {
@@ -563,12 +564,39 @@ function renderRealCases(reports, containerId) {
 function showCaseDetails(id) {
   const r = allReports.find(x => x.id === id);
   if (!r) return;
+  currentCaseId = r.id; 
   document.getElementById('modalId').textContent = `#SPC-${r.id}`;
   document.getElementById('modalTitle').textContent = (r.type || r.cruelty_type || 'Unknown').toUpperCase();
   document.getElementById('modalAddress').textContent = r.address || 'No address';
   document.getElementById('modalDesc').textContent = r.description || r.incident_desc || 'No description.';
   document.getElementById('modalContact').textContent = r.contact_number || r.reporter_contact || 'Anonymous';
   document.getElementById('caseModal').classList.add('show');
+}
+
+async function deleteCase(id) {
+  if (!id) return;
+  if (!confirm('Are you sure you want to permanently delete this case report?')) return;
+  
+  console.log('Deleting case:', id);
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/reports?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
+    
+    if (res.ok) {
+      console.log('Case deleted successfully');
+      closeModal();
+      loadRealData();
+    } else {
+      console.error('Delete failed');
+    }
+  } catch (err) {
+    console.error('Delete error:', err);
+  }
 }
 
 function closeModal() {
