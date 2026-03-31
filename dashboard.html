@@ -395,7 +395,7 @@ body::before {
         <div id="modalContact" class="detail-value">—</div>
       </div>
 
-      <button id="btnDelete" onclick="deleteCase(currentCaseId)" style="width:100%; margin-top:20px; padding:12px; border:none; border-radius:4px; background:rgba(232,64,26,0.1); color:#E8401A; font-family:'DM Sans',sans-serif; font-weight:700; cursor:pointer;">Delete Case Report</button>
+      <button id="btnDelete" onclick="deleteCase()" style="width:100%; margin-top:20px; padding:12px; border:none; border-radius:4px; background:rgba(232,64,26,0.1); color:#E8401A; font-family:'DM Sans',sans-serif; font-weight:700; cursor:pointer;">Delete Case Report</button>
     </div>
   </div>
 
@@ -461,7 +461,10 @@ async function loadRealData() {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/reports?order=created_at.desc`, {
       headers: {
         'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
       }
     });
     const raw = await res.json();
@@ -473,27 +476,35 @@ async function loadRealData() {
     }
 
     const reports = allReports;
-    document.getElementById('statTotal').textContent = reports.length;
-    document.getElementById('statTotalSub').textContent = reports.length + ' reports';
-    
-    const severeCount = reports.filter(r => r.severity === 'severe' || r.type === 'severe').length;
-    document.getElementById('statSevere').textContent = severeCount;
-    document.getElementById('statSevereSub').textContent = reports.length > 0 ? Math.round(severeCount/reports.length*100)+'%' : '0%';
-    
-    const openCount = reports.filter(r => r.case_status === 'open' || !r.case_status).length;
-    document.getElementById('statOpen').textContent = openCount;
-    
-    const resolvedCount = reports.filter(r => r.case_status === 'resolved').length;
-    document.getElementById('statResolved').textContent = resolvedCount;
-
-    renderBreakdown(reports);
-    renderRealCases(reports.filter(r => r.case_status === 'open' || !r.case_status), 'caseListOpen');
-    renderRealCases(reports.filter(r => r.case_status === 'investigating'), 'caseListInvestigating');
-    renderRealCases(reports.filter(r => r.case_status === 'resolved'), 'caseListResolved');
+    renderDashboardUI(reports);
 
   } catch (err) {
     console.error('Fetch error:', err);
   }
+}
+
+function renderDashboardUI(reports) {
+  if (!Array.isArray(reports)) return;
+
+  // Stats
+  document.getElementById('statTotal').textContent = reports.length;
+  document.getElementById('statTotalSub').textContent = reports.length + ' reports';
+  
+  const severeCount = reports.filter(r => r.severity === 'severe' || r.type === 'severe').length;
+  document.getElementById('statSevere').textContent = severeCount;
+  document.getElementById('statSevereSub').textContent = reports.length > 0 ? Math.round(severeCount/reports.length*100)+'%' : '0%';
+  
+  const openCount = reports.filter(r => r.case_status === 'open' || !r.case_status).length;
+  document.getElementById('statOpen').textContent = openCount;
+  
+  const resolvedCount = reports.filter(r => r.case_status === 'resolved').length;
+  document.getElementById('statResolved').textContent = resolvedCount;
+
+  // Lists
+  renderBreakdown(reports);
+  renderRealCases(reports.filter(r => r.case_status === 'open' || !r.case_status), 'caseListOpen');
+  renderRealCases(reports.filter(r => r.case_status === 'investigating'), 'caseListInvestigating');
+  renderRealCases(reports.filter(r => r.case_status === 'resolved'), 'caseListResolved');
 }
 
 function renderBreakdown(reports) {
@@ -573,29 +584,46 @@ function showCaseDetails(id) {
   document.getElementById('caseModal').classList.add('show');
 }
 
-async function deleteCase(id) {
-  if (!id) return;
+async function deleteCase() {
+  const id = currentCaseId;
+  console.log('Action: deleteCase called for currentCaseId:', id);
+  if (!id) {
+    console.warn('Action Aborted: No currentCaseId found in global state.');
+    return;
+  }
   if (!confirm('Are you sure you want to permanently delete this case report?')) return;
   
-  console.log('Deleting case:', id);
+  // Visual feedback
+  const btn = document.getElementById('btnDelete');
+  if (btn) { btn.textContent = 'Deleting...'; btn.disabled = true; }
+
+  // OPTIMISTIC UI: Update the local state immediately
+  console.log('Optimistic delete triggered for:', id);
+  allReports = allReports.filter(r => r.id !== id);
+  renderDashboardUI(allReports);
+  closeModal();
+
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/reports?id=eq.${id}`, {
       method: 'DELETE',
       headers: {
         'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json'
       }
     });
     
     if (res.ok) {
-      console.log('Case deleted successfully');
-      closeModal();
-      loadRealData();
+      console.log('Server deletion acknowledged for:', id);
     } else {
-      console.error('Delete failed');
+      const errorData = await res.text();
+      console.error('Server deletion FAILED:', res.status, errorData);
+      alert(`Server error: ${res.status}. Refreshing dashboard.`);
+      loadRealData();
     }
   } catch (err) {
-    console.error('Delete error:', err);
+    console.error('Network failure during deletion:', err);
+    loadRealData();
   }
 }
 
